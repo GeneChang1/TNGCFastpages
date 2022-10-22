@@ -1,6 +1,10 @@
-
-
-
+---
+toc: false
+layout: post
+description: This is our chess project!
+categories: [project]
+title: Chess
+---
 
 <html>
     <head>
@@ -9,7 +13,7 @@
         <style>
             .chess-board { border-spacing: 0; border-collapse: collapse; margin-left: 5%; margin-right: 15%;}
             .chess-board th { padding: 2em; }
-            .chess-board td { border: 1px solid; width: 6em; height: 6em; text-align: center;}
+            .chess-board td { border: 1px solid; width: 1em; height: 1em; text-align: center;}
             .chess-board .light { background: #FFFFFF; }
             .chess-board .dark { background: #808080; }
         </style>
@@ -130,22 +134,46 @@
                 chessBoard[newKey] = "O"
             }
         }
-        chessBoard["a2"] = "wP";
-        chessBoard["b2"] = "wP";
-        chessBoard["c2"] = "wP";
-        chessBoard["d2"] = "wP";
-        chessBoard["e2"] = "wP";
-        chessBoard["f2"] = "wP";
-        chessBoard["g2"] = "wP";
-        chessBoard["h2"] = "wP";
+        for (x in lettersOnBoard){
+            newPawn = lettersOnBoard[x] + "2";
+            chessBoard[newPawn] = "wP";
+        }
         chessBoard["a1"] = "wR";
-        chessBoard["b1"] = "wKn";
+        chessBoard["b1"] = "wN";
         chessBoard["c1"] = "wB";
         chessBoard["d1"] = "wQ";
         chessBoard["e1"] = "wK";
         chessBoard["f1"] = "wB";
-        chessBoard["g1"] = "wKn";
+        chessBoard["g1"] = "wN";
         chessBoard["h1"] = "wR";
+        for (x in lettersOnBoard){
+            newPawn = lettersOnBoard[x] + "7";
+            chessBoard[newPawn] = "bP";
+        }
+        chessBoard["a8"] = "bR";
+        chessBoard["b8"] = "bN";
+        chessBoard["c8"] = "bB";
+        chessBoard["d8"] = "bQ";
+        chessBoard["e8"] = "bK";
+        chessBoard["f8"] = "bB";
+        chessBoard["g8"] = "bN";
+        chessBoard["h8"] = "bR";
+        // assigns chess piece codes to their emoji 
+        let chessPieces = {
+            wP: "♙",
+            wR: "♖",
+            wN: "♘",
+            wB: "♗",
+            wQ: "♕",
+            wK: "♔",
+            O: "",
+            bP: "♟",
+            bR: "♜",
+            bN: "♞",
+            bB: "♝",
+            bQ: "♛",
+            bK: "♚",
+        }
         // piece class, to be extended by other classes
         class piece{
             constructor(_position, _color){
@@ -212,10 +240,24 @@
             }
             //method to return the pieces which can be captured. 
             getAvailableCaptures(){
+                // defines new variables as other methods in this class which may be useful.
                 let totalMoves = this.getTotalMoves();
                 let obstructedMoves = this.getObstructedMoves();
+                // defines arrays
                 let sameRow = [];
                 let sameColumn = [];
+                let columnNums = [];
+                let columnDifs = [];
+                let negDifsColumn = [];
+                let posDifsColumn = [];
+                let rowLets = [];
+                let rowNums = [];
+                let rowDifs = [];
+                let posDifsRow = [];
+                let negDifsRow = [];
+                let captures = [];
+                let finalCaptures = [];
+                // finds all of the moves which are in the same row or in the same column as the rook.
                 obstructedMoves.forEach((c) => {
                     if (this.position.split("")[0] == c.split("")[0]){
                         sameColumn.push(c);
@@ -224,29 +266,49 @@
                         sameRow.push(c);
                     }
                 })
-                console.log(sameColumn);
-                console.log(sameRow);
-                let columnNums = [];
+                //adds to a new array all of the numbers in the obstructed columns. Also converts it to an Integer
                 sameColumn.forEach((c) => {
-                    //adds to a new array all of the numbers in the obstructed columns. Also converts it to an Integer
                     columnNums.push(parseInt(c.split("")[1]));
-                })
+                })        
                 //elipses is a spread function, basically inputs each value in the array as it's own parameter. 
-                var min = Math.min(...columnNums);
-                var max = Math.max(...columnNums);
-                var minPlace = sameColumn[columnNums.indexOf(min)];
-                var maxPlace = sameColumn[columnNums.indexOf(max)];
-                //Toby when you come back to this you need to subtract the current position and use the difference. You forgor :skull:
+                //this foreach finds the difference between the pieces in the same column and the rooks current position
+                columnNums.forEach((c) => {columnDifs.push(c - parseInt(this.position.split("")[1]))});
+                //this foreach defines two new
+                columnDifs.forEach((c) => {if (c < 0) negDifsColumn.push(Math.abs(c)); else posDifsColumn.push(c);})
+                // finds the minimum positive number and the minimum negative number and converts them to an integer
+                var posMinColumn = parseInt(Math.min(...posDifsColumn));
+                var negMinColumn = parseInt(Math.min(...negDifsColumn));
+                // works backwards to find the position on the board given the smallest differences 
+                sameColumn.forEach((c) => {if (parseInt(c.split("")[1]) == parseInt(this.position.split("")[1]) + posMinColumn || parseInt(c.split("")[1]) == parseInt(this.position.split("")[1]) - negMinColumn){captures.push(c)}})
+                // basically does all of the same stuff but for the rows using the index of the lettersOnBoard array
+                sameRow.forEach((c) => {rowLets.push(c.split("")[0]);})
+                rowLets.forEach((c) => {rowNums.push(lettersOnBoard.indexOf(c) + 1)})
+                rowNums.forEach((c) => {rowDifs.push(parseInt(c) - (lettersOnBoard.indexOf(this.position.split("")[0]) + 1))})
+                rowDifs.forEach((c) => {if (c < 0) negDifsRow.push(Math.abs(c)); else posDifsRow.push(c);})
+                var posMinRow = parseInt(Math.min(...posDifsRow));
+                var negMinRow = parseInt(Math.min(...negDifsRow))
+                sameRow.forEach((c) => {if ((lettersOnBoard.indexOf(c.split("")[0]) + 1) == (lettersOnBoard.indexOf(this.position.split("")[0]) + posMinRow + 1) || (lettersOnBoard.indexOf(c.split("")[0]) + 1) == (lettersOnBoard.indexOf(this.position.split("")[0]) - negMinRow + 1)){captures.push(c)}})
+                //checks if captures are the same color or not
+                captures.forEach((c) => {
+                    if (chessBoard[c].split("")[0] != this.color){
+                        finalCaptures.push(c);
+                    }
+                })
+                return finalCaptures
             }
         }
-    //function to add the board to the table
-    function getPiece(id) {
-        document.getElementById(id).innerHTML = chessBoard[id];
-    }
-    //code that runs lol
-    for (x in chessBoard){
-        getPiece(x)
-    }
-    let rook1 = new rook("b1", "b");
+        //function to add the board to the table
+        function getPiece(id) {
+            document.getElementById(id).innerHTML = chessPieces[chessBoard[id]];
+            document.getElementById(id).style.fontSize = "100px";
+            document.getElementById(id).size = "10px";
+        }
+        //defines new rook object
+        //let rook1 = new rook("b1", "b");
+    </script>
+    <script>
+        for (x in chessBoard){
+            getPiece(x)
+        }
     </script>
 </html>
