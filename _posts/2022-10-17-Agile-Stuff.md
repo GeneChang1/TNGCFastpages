@@ -7,9 +7,9 @@ title: Agile Methodology Weekly Plans and Notes
 ---
 
 # Roles
-> Scrum Master: Toby Leeder
-> Dev Ops: Gene Chang
-> Frontend: Nathan Capule
+> Scrum Master: Toby Leeder <br>
+> Dev Ops: Gene Chang <br>
+> Frontend: Nathan Capule <br>
 > Backend: Caleb Navarro
 
 # Week 9
