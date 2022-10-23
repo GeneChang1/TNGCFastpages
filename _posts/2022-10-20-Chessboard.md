@@ -7,7 +7,7 @@ title: Chess
 ---
 <a href="https://www.chess.com/learn-how-to-play-chess">
     <button>How do I play chess?<button>
-<a href="http://0.0.0.0:4000/TNGCFastpages/2022/10/23/Feedback.html">
+<a href="{{ site.baseurl }}/2022/10/23/Feedback.html">
     <button>Report an Issue<button>
 <html>
     <head>
