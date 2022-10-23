@@ -5,13 +5,16 @@ description: This is our chess project!
 categories: [project]
 title: Chess
 ---
-
+<a href="https://www.chess.com/learn-how-to-play-chess">
+    <button>How do I play chess?<button>
+<a href="http://0.0.0.0:4000/TNGCFastpages/2022/10/23/Feedback.html">
+    <button>Report an Issue<button>
 <html>
     <head>
         <title></title>
         <meta charset="UTF-8">
         <style>
-            .chess-board { border-spacing: 0; border-collapse: collapse; margin-left: 5%; margin-right: 15%;}
+            .chess-board { border-spacing: 0; border-collapse: collapse; margin-left: 0%; margin-right: 5%;}
             .chess-board th { padding: 2em; }
             .chess-board td { border: 1px solid; width: 1em; height: 1em; text-align: center;}
             .chess-board .light { background: #FFFFFF; }
