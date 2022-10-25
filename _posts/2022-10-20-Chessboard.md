@@ -134,7 +134,7 @@ title: Chess
             letter = lettersOnBoard[j];
             for (i = 1; i <= 8; i++){
                 var newKey = letter + i;
-                chessBoard[newKey] = "O"
+                chessBoard[newKey] = "OO"
             }
         }
         for (x in lettersOnBoard){
@@ -169,7 +169,7 @@ title: Chess
             wB: "♗",
             wQ: "♕",
             wK: "♔",
-            O: "",
+            OO: "",
             bP: "♟",
             bR: "♜",
             bN: "♞",
@@ -191,10 +191,14 @@ title: Chess
                 super(_position, _color);
                 // automatically sets the spot on the board which is passed in to this rook
                 this.setPosition();
-                }
+            }   
             //method to set the spot on the board to this piece based on this pieces current position
             setPosition(){
                 chessBoard[this.position] = this.color + "R"
+            }
+            move(move){
+                if(this.getFreeMoves().includes(move)) {this.position = move;}
+                this.setPosition();
             }
             //method to return all of the available moves that the piece can make. 
             getTotalMoves(){
@@ -207,7 +211,7 @@ title: Chess
                 for (var i = 1; i <= 8; i++){
                     var newMove = lettersOnBoard[i - 1] + currentPosition[1];
                     moves.push(newMove);
-                }  
+                }
                 let totalMoves = [];
                 moves.forEach((c) => {
                     if (c != this.position){
@@ -215,7 +219,7 @@ title: Chess
                     }
                 });
                 return totalMoves;
-            }   
+            } 
             //method to return all of the obstructed moves based on the total moves
             getObstructedMoves(){
                 let totalMoves = this.getTotalMoves();
@@ -298,16 +302,19 @@ title: Chess
                     }
                 })
                 return finalCaptures
-            }
+            }   
         }
         //function to add the board to the table
         function getPiece(id) {
-            document.getElementById(id).innerHTML = chessPieces[chessBoard[id]];
+            document.getElementById(id).innerHTML = chessPieces[chessBoard[id].split("")[0]+chessBoard[id].split("")[1]];
             document.getElementById(id).style.fontSize = "100px";
             document.getElementById(id).size = "10px";
         }
         //defines new rook object
-        //let rook1 = new rook("b1", "b");
+        //let rook1 = new rook("b1", "w");
+    </script>
+    <script>
+        
     </script>
     <script>
         for (x in chessBoard){
