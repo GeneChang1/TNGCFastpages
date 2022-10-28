@@ -4,6 +4,7 @@ layout: post
 description: Here is where we will create weekly plans and iterate our weekly plans.
 categories: [plans]
 title: Agile Methodology Weekly Plans and Notes
+hide: true
 ---
 
 # Roles

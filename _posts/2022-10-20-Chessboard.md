@@ -1,7 +1,6 @@
 ---
 toc: false
 layout: post
-description: This is our chess project!
 categories: [project]
 title: Chess
 ---
@@ -22,7 +21,7 @@ title: Chess
         </style>
     </head>
     <body>
-        <table class="chess-board">
+        <table class="chess-board" id="chess-board">
             <tbody>
                 <tr>
                     <th></th>
@@ -161,6 +160,7 @@ title: Chess
         chessBoard["f8"] = "bB";
         chessBoard["g8"] = "bN";
         chessBoard["h8"] = "bR";
+        chessBoard["d5"] = "OO";
         // assigns chess piece codes to their emoji 
         let chessPieces = {
             wP: "♙",
@@ -305,16 +305,20 @@ title: Chess
             }   
         }
         //function to add the board to the table
+        function movePiece(id){
+            chessBoard["d5"] = "bR";
+            document.getElementById(id).innerHTML = chessPieces[chessBoard[id].split("")[0]+chessBoard[id].split("")[1]];
+        }
         function getPiece(id) {
             document.getElementById(id).innerHTML = chessPieces[chessBoard[id].split("")[0]+chessBoard[id].split("")[1]];
             document.getElementById(id).style.fontSize = "100px";
             document.getElementById(id).size = "10px";
+            document.getElementById(id).onClick = function(){movePiece(id)};
         }
         //defines new rook object
         //let rook1 = new rook("b1", "w");
     </script>
     <script>
-        
     </script>
     <script>
         for (x in chessBoard){

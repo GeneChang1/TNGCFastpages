@@ -11,6 +11,7 @@ type: pbl
 week: 9
 nb_path: _notebooks/2022-10-17-PBL-webapi_tutorial.ipynb
 layout: notebook
+hide: true
 ---
 
 <!--
