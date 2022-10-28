@@ -5,7 +5,7 @@ categories: [project]
 title: Chess
 ---
 <a href="https://www.chess.com/learn-how-to-play-chess">
-    <button>How do I play chess?<button>
+    <button>How do I play chess?</i><button>
 <a href="{{ site.baseurl }}/2022/10/23/Feedback.html">
     <button>Report an Issue<button>
 <html>
@@ -304,23 +304,21 @@ title: Chess
             }   
         }
         //function to add the board to the table
-        function movePiece(id){
-            chessBoard["d5"] = "bR";
-            document.getElementById(id).innerHTML = chessPieces[chessBoard[id].split("")[0]+chessBoard[id].split("")[1]];
-        }
         function getPiece(id) {
             document.getElementById(id).innerHTML = chessPieces[chessBoard[id].split("")[0]+chessBoard[id].split("")[1]];
             document.getElementById(id).style.fontSize = "100px";
             document.getElementById(id).size = "10px";
-            document.getElementById(id).onClick = function(){movePiece(id)};
         }
-        var table = document.getElementById("chessBoard");
+        var table = document.getElementById("chess-board");
         if (table != null) {
         for (var i = 0; i < table.rows.length; i++) {
             for (var j = 0; j < table.rows[i].cells.length; j++)
             table.rows[i].cells[j].onclick = function () {
-                tableText(this);
+                movePiece(this);
             };
+        }
+        function movePiece(id){
+            alert();
         }
     }
         //defines new rook object
