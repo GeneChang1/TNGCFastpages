@@ -160,7 +160,6 @@ title: Chess
         chessBoard["f8"] = "bB";
         chessBoard["g8"] = "bN";
         chessBoard["h8"] = "bR";
-        chessBoard["d5"] = "OO";
         // assigns chess piece codes to their emoji 
         let chessPieces = {
             wP: "♙",
@@ -315,6 +314,15 @@ title: Chess
             document.getElementById(id).size = "10px";
             document.getElementById(id).onClick = function(){movePiece(id)};
         }
+        var table = document.getElementById("chessBoard");
+        if (table != null) {
+        for (var i = 0; i < table.rows.length; i++) {
+            for (var j = 0; j < table.rows[i].cells.length; j++)
+            table.rows[i].cells[j].onclick = function () {
+                tableText(this);
+            };
+        }
+    }
         //defines new rook object
         //let rook1 = new rook("b1", "w");
     </script>
