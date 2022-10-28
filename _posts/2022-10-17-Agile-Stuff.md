@@ -52,7 +52,8 @@ hide: true
 - Nathan: Continue working on the same frontend aspects with Toby
 
 ### Weekly Struggles
-- API ISSUES: The API wasn't functional for a while and we didn't know why. Then Gene and Caleb realized they were just running it wrong and fixed it.
-- Makeing the ChessBoard interactive: Tried adding onclick events to the chessboard. At first it looked like it worked but the function ran too early and then it didn't work at all. Now we have a new idea on how to do it after some googling that we will implement soon. 
+- API ISSUES: The API wasn't functional for a while and we didn't know why. Then Gene and Caleb realized they were just running it wrong and thought they fixed it but it still isn't working.
+- Making the ChessBoard interactive: Tried adding onclick events to the chessboard. At first it looked like it worked but the function ran too early and then it didn't work at all. Now we have a new idea on how to do it after some googling that we will implement soon. 
+- Issues with the logic for the pieces, it's just hard to get it all working correctly. 
 
 ### Final Meeting, Friday
