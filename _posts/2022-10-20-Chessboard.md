@@ -495,6 +495,7 @@ title: Chess
                 moving = false;
             }else{
                 putBoard();
+                currentM = [];
                 moving = false;
             }
         }
