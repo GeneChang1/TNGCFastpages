@@ -85,6 +85,9 @@ layout: notebook
     <span class="p">}</span>
 <span class="p">}</span>
 
+<span class="k">for</span> <span class="p">(</span><span class="nx">x</span> <span class="k">in</span> <span class="nx">chessBoard</span><span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span>
+<span class="p">}</span>
 
 <span class="c1">// piece class, to be extended by other classes</span>
 <span class="kr">class</span> <span class="nx">piece</span><span class="p">{</span>
@@ -95,11 +98,19 @@ layout: notebook
     
     <span class="nx">move</span><span class="p">(</span><span class="nx">move</span><span class="p">,</span> <span class="nx">currentM</span><span class="p">){</span>
         <span class="kd">let</span> <span class="nx">currentBoard</span> <span class="o">=</span> <span class="nx">chessBoard</span><span class="p">[</span><span class="nx">currentM</span><span class="p">];</span>
-        <span class="k">if</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getFreeMoves</span><span class="p">().</span><span class="nx">includes</span><span class="p">(</span><span class="nx">move</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getAvailableMoves</span><span class="p">().</span><span class="nx">includes</span><span class="p">(</span><span class="nx">move</span><span class="p">))</span> <span class="p">{</span>
             <span class="k">this</span><span class="p">.</span><span class="nx">position</span> <span class="o">=</span> <span class="nx">move</span><span class="p">;</span>
             <span class="nx">chessBoard</span><span class="p">[</span><span class="nx">move</span><span class="p">]</span> <span class="o">=</span> <span class="nx">currentBoard</span><span class="p">;</span>
             <span class="nx">chessBoard</span><span class="p">[</span><span class="nx">currentM</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;OO&quot;</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">];</span>
         <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="nx">getAvailableMoves</span><span class="p">(){</span>
+        <span class="kd">let</span> <span class="nx">freeMoves</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getFreeMoves</span><span class="p">()</span>
+        <span class="kd">let</span> <span class="nx">captures</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getAvailableCaptures</span><span class="p">()</span>
+        <span class="nx">captures</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="nx">freeMoves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="nx">freeMoves</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -113,12 +124,73 @@ layout: notebook
 
 <div class="output_area">
 
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>[ &#39;OO&#39;, undefined ]</pre>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>a1
+a2
+a3
+a4
+a5
+a6
+a7
+a8
+b1
+b2
+b3
+b4
+b5
+b6
+b7
+b8
+c1
+c2
+c3
+c4
+c5
+c6
+c7
+c8
+d1
+d2
+d3
+d4
+d5
+d6
+d7
+d8
+e1
+e2
+e3
+e4
+e5
+e6
+e7
+e8
+f1
+f2
+f3
+f4
+f5
+f6
+f7
+f8
+g1
+g2
+g3
+g4
+g5
+g6
+g7
+g8
+h1
+h2
+h3
+h4
+h5
+h6
+h7
+h8
+</pre>
 </div>
-
 </div>
 
 </div>
@@ -293,15 +365,6 @@ layout: notebook
         <span class="p">})</span>
         <span class="k">return</span> <span class="nx">finalCaptures</span>
     <span class="p">}</span>
-    <span class="nx">getAvailableMoves</span><span class="p">(){</span>
-        <span class="kd">let</span> <span class="nx">freeMoves</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getFreeMoves</span><span class="p">()</span>
-        <span class="kd">let</span> <span class="nx">captures</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getAvailableCaptures</span><span class="p">()</span>
-        <span class="nx">captures</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-            <span class="nx">freeMoves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
-        <span class="p">})</span>
-        <span class="k">return</span> <span class="nx">freeMoves</span><span class="p">;</span>
-    <span class="p">}</span>
-    
 <span class="p">}</span>
 
 <span class="kd">let</span> <span class="nx">rook1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">rook</span><span class="p">(</span><span class="s2">&quot;d5&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">);</span>
@@ -412,22 +475,38 @@ OO OO OO OO OO OO OO OO
                     <span class="nx">captures</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">check</span><span class="p">);</span>
             <span class="p">}</span>
         <span class="p">})</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">captures</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">captures</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="kd">let</span> <span class="nx">pawn1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pawn</span><span class="p">(</span><span class="s2">&quot;c5&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">)</span>
+<span class="nx">chessBoard</span><span class="p">[</span><span class="nx">pawn1</span><span class="p">.</span><span class="nx">position</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nx">pawn1</span><span class="p">.</span><span class="nx">color</span> <span class="o">+</span> <span class="nx">pawn1</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="nx">pawn1</span><span class="p">]</span>
 
-
-
-<span class="c1">// for (var i = 0; i &lt; 8; i++){</span>
-<span class="c1">//     let i = new pawn (&quot;c&quot; + toString(i), b)</span>
-<span class="c1">// }</span>
-
-<span class="c1">//console.log(chessBoard[])</span>
+<span class="nx">printBoard</span><span class="p">()</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+OO OO OO OO OO OO OO OO 
+OO OO OO OO OO OO OO OO 
+OO OO OO OO bP OO OO OO 
+OO OO OO OO bR OO OO OO 
+OO OO OO OO wR OO OO OO 
+OO OO OO OO wR OO OO OO 
+OO OO OO OO OO OO OO OO 
+OO OO OO OO OO OO OO OO </pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -583,7 +662,7 @@ OO OO OO OO OO OO OO OO
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[ &#39;e5&#39; ]
+<pre>[ &#39;c5&#39;, &#39;e5&#39; ]
 </pre>
 </div>
 </div>
@@ -637,19 +716,18 @@ OO OO OO OO OO OO OO OO
 <span class="kd">let</span> <span class="nx">pawnw8</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">pawn</span><span class="p">(</span><span class="s2">&quot;h2&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
 <span class="nx">setBoard</span><span class="p">(</span><span class="nx">pawnw8</span><span class="p">)</span>
 
-<span class="c1">// printBoard()</span>
-<span class="c1">// movePiece(&quot;g2&quot;, &quot;g4&quot;);</span>
-<span class="c1">// movePiece(&quot;a1&quot;, &quot;g1&quot;);</span>
-<span class="c1">// console.log(&quot;&quot;);</span>
-<span class="c1">// movePiece(&quot;g4&quot;, &quot;g5&quot;);</span>
-<span class="c1">// movePiece(&quot;g5&quot;, &quot;g6&quot;);</span>
-<span class="c1">// movePiece(&quot;g6&quot;, &quot;g7&quot;);</span>
-<span class="c1">// printMoves(&quot;g7&quot;)</span>
-<span class="c1">// movePiece(&quot;g7&quot;, &quot;h8&quot;);</span>
-<span class="c1">// printBoard();</span>
+<span class="nx">printBoard</span><span class="p">()</span>
+<span class="nx">movePiece</span><span class="p">(</span><span class="s2">&quot;g2&quot;</span><span class="p">,</span> <span class="s2">&quot;g4&quot;</span><span class="p">);</span>
+<span class="nx">movePiece</span><span class="p">(</span><span class="s2">&quot;a1&quot;</span><span class="p">,</span> <span class="s2">&quot;g1&quot;</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+<span class="nx">movePiece</span><span class="p">(</span><span class="s2">&quot;g4&quot;</span><span class="p">,</span> <span class="s2">&quot;g5&quot;</span><span class="p">);</span>
+<span class="nx">movePiece</span><span class="p">(</span><span class="s2">&quot;g5&quot;</span><span class="p">,</span> <span class="s2">&quot;g6&quot;</span><span class="p">);</span>
+<span class="nx">movePiece</span><span class="p">(</span><span class="s2">&quot;g6&quot;</span><span class="p">,</span> <span class="s2">&quot;g7&quot;</span><span class="p">);</span>
+<span class="nx">printMoves</span><span class="p">(</span><span class="s2">&quot;g7&quot;</span><span class="p">)</span>
+<span class="nx">movePiece</span><span class="p">(</span><span class="s2">&quot;g7&quot;</span><span class="p">,</span> <span class="s2">&quot;h8&quot;</span><span class="p">);</span>
+<span class="nx">printBoard</span><span class="p">();</span>
 
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">chessBoard</span><span class="p">[</span><span class="s2">&quot;a1&quot;</span><span class="p">]);</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">chessBoard</span><span class="p">[</span><span class="s2">&quot;a1&quot;</span><span class="p">][</span><span class="mf">1</span><span class="p">].</span><span class="nx">getFreeMoves</span><span class="p">());</span>
+
 
 <span class="kd">function</span> <span class="nx">setBoard</span><span class="p">(</span><span class="nx">obj</span><span class="p">){</span>
     <span class="nx">chessBoard</span><span class="p">[</span><span class="nx">obj</span><span class="p">.</span><span class="nx">position</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nx">obj</span><span class="p">.</span><span class="nx">color</span> <span class="o">+</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="nx">obj</span><span class="p">]</span>
@@ -674,9 +752,25 @@ OO OO OO OO OO OO OO OO
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[ &#39;wR&#39;, rook { position: &#39;a1&#39;, color: &#39;w&#39;, id: &#39;R&#39; } ]
-[ &#39;b1&#39;, &#39;c1&#39;, &#39;d1&#39;, &#39;e1&#39;, &#39;f1&#39;, &#39;g1&#39; ]
-</pre>
+<pre>
+wR wP OO OO OO OO OO bR 
+OO wP OO OO OO OO OO OO 
+OO wP OO OO bP OO OO OO 
+OO wP OO OO bR OO OO OO 
+OO wP OO OO wR OO OO OO 
+OO wP OO OO wR OO OO OO 
+OO wP OO OO OO OO OO OO 
+wR wP OO OO OO OO OO bR 
+[ &#39;g8&#39;, &#39;h8&#39; ]
+
+OO wP OO OO OO OO OO bR 
+OO wP OO OO OO OO OO OO 
+OO wP OO OO bP OO OO OO 
+OO wP OO OO bR OO OO OO 
+OO wP OO OO wR OO OO OO 
+OO wP OO OO wR OO OO OO 
+wR OO OO OO OO OO OO OO 
+wR wP OO OO OO OO OO wP </pre>
 </div>
 </div>
 
