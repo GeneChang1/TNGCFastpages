@@ -445,6 +445,123 @@ window.onload = wrap_img;
                 return captures;
             }
         }
+        class bishop extends piece{
+            constructor(_position, _color){
+                // super is the position constructor, uh basically does some super cool inheritence stuff or something. 
+                super(_position, _color);
+                // automatically sets the spot on the board which is passed in to this rook
+                this.id = "B"
+                }   
+            //method to return all of the available moves that the piece can make. 
+            getTotalMoves(){
+                let currentPosition = this.position;
+                let movesLToR = [];
+                let movesRToL = [];
+                let furthestLeft = currentPosition;
+                let furthestRight = currentPosition;
+                let bruh = 0;
+                while (furthestLeft[0] != "a" && furthestLeft[1] != 1){
+                    furthestLeft = lettersOnBoard[lettersOnBoard.indexOf(furthestLeft[0]) - 1] + (furthestLeft[1] - 1);
+                }
+                while (furthestRight[0] != "h" && furthestRight[1] != 1){
+                    furthestRight = lettersOnBoard[lettersOnBoard.indexOf(furthestRight[0]) + 1] + (furthestRight[1] - 1);
+                }
+                for (i = 0; i < 8 - lettersOnBoard.indexOf(furthestLeft[0]) - furthestLeft[1] + 1; i++){
+                    movesLToR.push(lettersOnBoard[lettersOnBoard.indexOf(furthestLeft[0]) + i] + (parseInt(furthestLeft[1]) + i));
+                }
+                for (i = 0; i < 2 + lettersOnBoard.indexOf(furthestRight[0]) - furthestRight[1]; i++){
+                    movesRToL.push(lettersOnBoard[lettersOnBoard.indexOf(furthestRight[0]) - i] + (parseInt(furthestRight[1]) + i));
+                }
+                let totalMovesLToR = [];
+                let totalMovesRToL = []
+                movesLToR.forEach((c) => {
+                    if (c != this.position){
+                        totalMovesLToR.push(c);
+                    }
+                });
+                movesRToL.forEach((c) => {
+                    if (c != this.position){
+                        totalMovesRToL.push(c);
+                    }
+                });
+                return [totalMovesLToR, totalMovesRToL];
+            }
+            //method to return all of the obstructed moves based on the total moves
+            getObstructedMoves(){
+                let totalMoves = this.getTotalMoves();
+                let obstructedMovesLToR = [];
+                let obstructedMovesRToL = [];
+                let blockedMovesLToR = [];
+                let blockedMovesRToL = [];
+                let index = -1
+                // Finds the moves which are behind an obstructed move and also finds all of the obstructed moves. Only for left to right. Does it by compating whether the letter + number is higher or lower. 
+                totalMoves[0].forEach((c) => {
+                    if (!blockedMovesLToR.includes(c)){
+                        if (chessBoard[c][0] != "OO"){
+                            obstructedMovesLToR.push(c);
+                            index++
+                            totalMoves[0].forEach((c) => {
+                                try{
+                                    if (parseInt(obstructedMovesLToR[index][1]) + lettersOnBoard.indexOf(obstructedMovesLToR[index][0]) > parseInt(this.position[1]) + lettersOnBoard.indexOf(obstructedMovesLToR[index][0]) && parseInt(c[1]) + lettersOnBoard.indexOf(c[0]) > parseInt(obstructedMovesLToR[index][1]) + lettersOnBoard.indexOf(obstructedMovesLToR[index][0])){
+                                        blockedMovesLToR.push(c)
+                                    }
+                                    else if (obstructedMovesLToR[index][1] + lettersOnBoard.indexOf(obstructedMovesLToR[index][0]) < this.position[1] + lettersOnBoard.indexOf(obstructedMovesLToR[index][0]) && c[1] + lettersOnBoard.indexOf(c[0]) < obstructedMovesLToR[index][1] + lettersOnBoard.indexOf(obstructedMovesLToR[index][0])){
+                                        blockedMovesLToR.push(c)
+                                    }
+                                } catch{}
+                            })
+                        } 
+                    }
+                })
+                index = -1
+                // Finds the moves which are behind an obstructed move and also finds all of the obstructed moves. Only for right to left. Does it by finding whether the number is bigger or smaller (realized I was being dumb before but i'm not changing the old code. Because it's only one diaganol though you can easily find if its blocked just by the number.)
+                totalMoves[1].forEach((c) => {
+                    if (!blockedMovesRToL.includes(c)){
+                        if (chessBoard[c][0] != "OO"){
+                            obstructedMovesRToL.push(c);
+                            index++
+                            totalMoves[1].forEach((c) => {
+                                try{
+                                    if (parseInt(c[1]) > parseInt(obstructedMovesRToL[index][1]) && parseInt(obstructedMovesRToL[index][1]) > parseInt(this.position[1])){
+                                        blockedMovesRToL.push(c)
+                                    }
+                                    else if (parseInt(c[1]) < parseInt(obstructedMovesRToL[index][1]) && parseInt(obstructedMovesRToL[index][1]) < parseInt(this.position[1])){
+                                        blockedMovesRToL.push(c)
+                                    }
+                                } catch{}
+                            })
+                        } 
+                    }
+                })
+                //seperates the obstructed moves and the blocked moves and returns both. 
+                let obstructedMoves = [];
+                obstructedMovesLToR.forEach((c) => [obstructedMoves.push(c)])
+                obstructedMovesRToL.forEach((c) => [obstructedMoves.push(c)])
+                let blockedMoves = [];
+                blockedMovesLToR.forEach((c) => {blockedMoves.push(c);})
+                blockedMovesRToL.forEach((c) => {blockedMoves.push(c);})
+                return [obstructedMoves, blockedMoves];
+            }
+            //method to return all of the moves which are not obstructed
+            getFreeMoves(){
+                let totalMoves = this.getTotalMoves()[0];
+                this.getTotalMoves()[1].forEach((c) => {totalMoves.push(c)})
+                let obstructedMoves = this.getObstructedMoves()[0];
+                this.getObstructedMoves()[1].forEach((c) => {obstructedMoves.push(c)})
+                totalMoves = totalMoves.filter((c) => !obstructedMoves.includes(c) );
+                return totalMoves;
+            }
+            //method to return the pieces which can be captured. 
+            getAvailableCaptures(){
+                let finalCaptures = [];
+                let obstructedMoves = this.getObstructedMoves()[0]
+                obstructedMoves.forEach((c) => {
+                    if (chessBoard[c][0][0] != this.color) {finalCaptures.push(c)}
+                })
+                console.log(finalCaptures)
+                return finalCaptures
+            }
+        }
     </script>
     <script>
         //useful functions
@@ -512,6 +629,15 @@ window.onload = wrap_img;
             bQ: "♛",
             bK: "♚",
         }
+        //Bishops
+        let bishopb1 = new bishop("c8", "b");
+        setBoard(bishopb1)
+        let bishopb2 = new bishop("f8", "b");
+        setBoard(bishopb2)
+        let bishopw1 = new bishop("c1", "w");
+        setBoard(bishopw1)
+        let bishopw2 = new bishop("f1", "w");
+        setBoard(bishopw2)
         //Rooks
         let rookb1 = new rook("a8", "b");
         setBoard(rookb1)
