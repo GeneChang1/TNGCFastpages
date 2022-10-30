@@ -540,6 +540,7 @@ window.onload = wrap_img;
                 let blockedMoves = [];
                 blockedMovesLToR.forEach((c) => {blockedMoves.push(c);})
                 blockedMovesRToL.forEach((c) => {blockedMoves.push(c);})
+                obstructedMoves = obstructedMoves.filter((c) => !blockedMoves.includes(c))
                 return [obstructedMoves, blockedMoves];
             }
             //method to return all of the moves which are not obstructed
