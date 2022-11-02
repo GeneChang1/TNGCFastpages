@@ -19,7 +19,9 @@ title: Chess
             .chess-board .light { background: #FFFFFF; }
             .chess-board .dark { background: #808080; }
             .chess-board .selected { background: #f0ff00; }
+            .chess-board .selected { background: #f0ff00; }
         </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     </head>
     <body>
@@ -277,7 +279,7 @@ title: Chess
                 rowLets.forEach((c) => {
                     rowNums.push(lettersOnBoard.indexOf(c) + 1)
                 })
-                rowNums.forEach((c) => {
+                rowNums.forEach((c) => { 
                     rowDifs.push(parseInt(c) - (lettersOnBoard.indexOf(this.position.split("")[0]) + 1))
                 })
                 rowDifs.forEach((c) => {
@@ -292,7 +294,7 @@ title: Chess
                 })
                 //checks if captures are the same color or not
                 captures.forEach((c) => {
-                    if (chessBoard[c][0].split("")[0] != this.color){
+                    if (chessBoard[c][0][0].split("")[0] != this.color){
                         finalCaptures.push(c);
                     }
                 })
@@ -576,6 +578,11 @@ title: Chess
             if (color){document.getElementById(id).classList.add('dark');}
             else document.getElementById(id).classList.add('light');
             color = !color;
+            try{document.getElementById(id).classList.remove('selected')}catch{}
+            if (id.split("")[1] == "1") color = !color;
+            if (color){document.getElementById(id).classList.add('dark');}
+            else document.getElementById(id).classList.add('light');
+            color = !color;
         }
         function putBoard(){
             for (x in chessBoard){
@@ -666,6 +673,96 @@ title: Chess
         //Kings
         let kingw = new king("e1" , "w")
         setBoard(kingw)
+        //puts the pieces on the board
+        putBoard()
+        //function to add the board to the table
+        //adds the onclick events to each td in the table
+        function putBoard(){
+            for (x in chessBoard){
+                putOnBoard(x);
+            }
+        }
+    </script>
+    <script>
+        // all of the setup
+        lettersOnBoard = "abcdefgh";
+        chessBoard = {};
+        //assigns the board
+        for (j = 0; j <= 7; j++){
+            letter = lettersOnBoard[j];
+            for (i = 1; i <= 8; i++){
+                var newKey = letter + i;
+                chessBoard[newKey] = ["OO", undefined]
+            }
+        }
+        let currentM = [];
+        // assigns chess piece codes to their emoji 
+        let chessPieces = {
+            wP: "♙",
+            wR: "♖",
+            wN: "♘",
+            wB: "♗",
+            wQ: "♕",
+            wK: "♔",
+            OO: "",
+            bP: "♟",
+            bR: "♜",
+            bN: "♞",
+            bB: "♝",
+            bQ: "♛",
+            bK: "♚",
+        }
+        //Bishops
+        let bishopb1 = new bishop("c8", "b");
+        setBoard(bishopb1)
+        let bishopb2 = new bishop("f8", "b");
+        setBoard(bishopb2)
+        let bishopw1 = new bishop("c1", "w");
+        setBoard(bishopw1)
+        let bishopw2 = new bishop("f1", "w");
+        setBoard(bishopw2)
+        //Rooks
+        let rookb1 = new rook("a8", "b");
+        setBoard(rookb1)
+        let rookb2 = new rook("h8", "b");
+        setBoard(rookb2)
+        let rookw1 = new rook("a1", "w");
+        setBoard(rookw1)
+        let rookw2 = new rook("h1", "w");
+        setBoard(rookw2)
+        //Pawns
+        let pawnw1 = new pawn("a2", "w")
+        setBoard(pawnw1)
+        let pawnw2 = new pawn("b2", "w")
+        setBoard(pawnw2)
+        let pawnw3 = new pawn("c2", "w")
+        setBoard(pawnw3)
+        let pawnw4 = new pawn("d2", "w")
+        setBoard(pawnw4)
+        let pawnw5 = new pawn("e2", "w")
+        setBoard(pawnw5)
+        let pawnw6 = new pawn("f2", "w")
+        setBoard(pawnw6)
+        let pawnw7 = new pawn("g2", "w")
+        setBoard(pawnw7)
+        let pawnw8 = new pawn("h2", "w")
+        setBoard(pawnw8)
+        let pawnb1 = new pawn("a7", "b")
+        setBoard(pawnb1)
+        let pawnb2 = new pawn("b7", "b")
+        setBoard(pawnb2)
+        let pawnb3 = new pawn("c7", "b")
+        setBoard(pawnb3)
+        let pawnb4 = new pawn("d7", "b")
+        setBoard(pawnb4)
+        let pawnb5 = new pawn("e7", "b")
+        setBoard(pawnb5)
+        let pawnb6 = new pawn("f7", "b")
+        setBoard(pawnb6)
+        let pawnb7 = new pawn("g7", "b")
+        setBoard(pawnb7)
+        let pawnb8 = new pawn("h7", "b")
+        setBoard(pawnb8)
         //puts the pieces on the board
         putBoard()
         //function to add the board to the table
