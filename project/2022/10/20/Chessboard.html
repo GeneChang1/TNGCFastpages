@@ -895,7 +895,7 @@ window.onload = wrap_img;
             wB: "♗",
             wQ: "♕",
             wK: "♔",
-            OO: "ㅤ",
+            OO: "",
             bP: "♟",
             bR: "♜",
             bN: "♞",
@@ -903,6 +903,8 @@ window.onload = wrap_img;
             bQ: "♛",
             bK: "♚",
         }
+        //move counter
+        let turn = 0;
         //Queens
         let queenw = new queen("d1", "w")
         setBoard(queenw)
@@ -974,7 +976,7 @@ window.onload = wrap_img;
         }
         function move(id){
             var td = $(id).closest('td').attr('id')
-            if (!moving && document.getElementById(td).innerHTML != ""){
+            if (!moving && document.getElementById(td).innerHTML != "" && turnCheck(td)){
                 moving = true
                 if (td.innerHTML != ""){
                     currentM.push(td);
@@ -989,10 +991,25 @@ window.onload = wrap_img;
                 putBoard();
                 currentM = [];
                 moving = false;
+                turn += 1;
             }else{
                 putBoard();
                 currentM = [];
                 moving = false;
+                if (document.getElementById(td).innerHTML != ""){
+                    move(id);
+                }
+            }
+        }
+        function turnCheck(td){
+            if (turn % 2 == 1 && chessBoard[td][0][0] == "b"){
+                return true
+            }
+            if (turn % 2 == 0 && chessBoard[td][0][0] == "w"){
+                return true
+            }
+            else {
+                return false;
             }
         }
     </script>
