@@ -33,7 +33,7 @@ title: Chess
                     <th class="letnum">c</th>
                     <th class="letnum">d</th>
                     <th class="letnum">e</th>
-                    <th class="letnum">f</th>
+                    <th class="letnum" style="font-size: 37.5px;">f</th>
                     <th class="letnum">g</th>
                     <th class="letnum">h</th>
                 </tr>
