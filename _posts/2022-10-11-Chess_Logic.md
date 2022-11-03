@@ -142,6 +142,347 @@ layout: notebook
 
 <div class="inner_cell">
     <div class="input_area">
+<div class=" highlight hl-javascript"><pre><span></span><span class="kr">class</span> <span class="nx">queen</span> <span class="kr">extends</span> <span class="nx">piece</span><span class="p">{</span>
+    <span class="nx">constructor</span><span class="p">(</span><span class="nx">_position</span><span class="p">,</span> <span class="nx">_color</span><span class="p">){</span>
+        <span class="c1">// super is the position constructor, uh basically does some super cool inheritence stuff or something. </span>
+        <span class="kr">super</span><span class="p">(</span><span class="nx">_position</span><span class="p">,</span> <span class="nx">_color</span><span class="p">);</span>
+        <span class="c1">// automatically sets the spot on the board which is passed in to this rook</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="s2">&quot;Q&quot;</span><span class="p">;</span>
+        <span class="p">}</span>   
+    <span class="c1">//method to return all of the available moves that the piece can make. </span>
+    <span class="nx">getTotalMovesR</span><span class="p">(){</span>
+        <span class="kd">let</span> <span class="nx">currentPosition</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+        <span class="kd">let</span> <span class="nx">moves</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="mf">8</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+            <span class="kd">var</span> <span class="nx">newMove</span> <span class="o">=</span> <span class="nx">currentPosition</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span> <span class="o">+</span> <span class="nx">i</span><span class="p">;</span>
+            <span class="nx">moves</span><span class="p">[</span><span class="nx">i</span> <span class="o">-</span> <span class="mf">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">newMove</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="mf">8</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+            <span class="kd">var</span> <span class="nx">newMove</span> <span class="o">=</span> <span class="nx">lettersOnBoard</span><span class="p">[</span><span class="nx">i</span> <span class="o">-</span> <span class="mf">1</span><span class="p">]</span> <span class="o">+</span> <span class="nx">currentPosition</span><span class="p">[</span><span class="mf">1</span><span class="p">];</span>
+            <span class="nx">moves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">newMove</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">let</span> <span class="nx">totalMoves</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nx">moves</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">c</span> <span class="o">!=</span> <span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">){</span>
+                <span class="nx">totalMoves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">});</span>
+        <span class="k">return</span> <span class="nx">totalMoves</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">//method to return all of the obstructed moves based on the total moves</span>
+    <span class="nx">getObstructedMovesR</span><span class="p">(){</span>
+        <span class="kd">let</span> <span class="nx">totalMoves</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getTotalMovesR</span><span class="p">();</span>
+        <span class="kd">let</span> <span class="nx">obstructedMoves</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">blockedMoves</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">index</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1</span>
+        <span class="nx">totalMoves</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">obstructedMoves</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">c</span><span class="p">)){</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nx">chessBoard</span><span class="p">[</span><span class="nx">c</span><span class="p">][</span><span class="mf">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;OO&quot;</span><span class="p">){</span>
+                    <span class="nx">obstructedMoves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+                    <span class="nx">index</span><span class="o">++</span>
+                    <span class="nx">totalMoves</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+                        <span class="k">try</span><span class="p">{</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="nx">obstructedMoves</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="mf">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="nx">c</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nx">obstructedMoves</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="mf">1</span><span class="p">]){</span>
+                                <span class="nx">blockedMoves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span>
+                            <span class="p">}</span>
+                            <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">obstructedMoves</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="mf">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="nx">c</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nx">obstructedMoves</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="mf">1</span><span class="p">]){</span>
+                                <span class="nx">blockedMoves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span>
+                            <span class="p">}</span>
+                        <span class="p">}</span> <span class="k">catch</span><span class="p">{}</span>
+                        <span class="k">try</span><span class="p">{</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">obstructedMoves</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="mf">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">[</span><span class="mf">0</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">c</span><span class="p">[</span><span class="mf">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">obstructedMoves</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="mf">0</span><span class="p">])){</span>
+                                <span class="nx">blockedMoves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span>
+                            <span class="p">}</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">obstructedMoves</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="mf">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">[</span><span class="mf">0</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">c</span><span class="p">[</span><span class="mf">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">obstructedMoves</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="mf">0</span><span class="p">])){</span>
+                                <span class="nx">blockedMoves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span>
+                            <span class="p">}</span>
+                        <span class="p">}</span> <span class="k">catch</span><span class="p">{}</span>
+                    <span class="p">})</span>
+                <span class="p">}</span> 
+            <span class="p">}</span>
+        <span class="p">})</span>
+        <span class="nx">blockedMoves</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span><span class="nx">obstructedMoves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);})</span>
+        <span class="k">return</span> <span class="nx">obstructedMoves</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">//method to return all of the moves which are not obstructed</span>
+    <span class="nx">getFreeMovesR</span><span class="p">(){</span>
+        <span class="kd">let</span> <span class="nx">totalMoves</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getTotalMovesR</span><span class="p">();</span>
+        <span class="kd">let</span> <span class="nx">obstructedMoves</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getObstructedMovesR</span><span class="p">();</span>
+        <span class="nx">totalMoves</span> <span class="o">=</span> <span class="nx">totalMoves</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span> <span class="p">(</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="o">!</span><span class="nx">obstructedMoves</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span> <span class="p">);</span>
+        <span class="k">return</span> <span class="nx">totalMoves</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">//method to return the pieces which can be captured. </span>
+    <span class="nx">getAvailableCapturesR</span><span class="p">(){</span>
+        <span class="c1">// defines new variables as other methods in this class which may be useful.</span>
+        <span class="kd">let</span> <span class="nx">totalMoves</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getTotalMovesR</span><span class="p">();</span>
+        <span class="kd">let</span> <span class="nx">obstructedMoves</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getObstructedMovesR</span><span class="p">();</span>
+        <span class="c1">// defines arrays</span>
+        <span class="kd">let</span> <span class="nx">sameRow</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">sameColumn</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">columnNums</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">columnDifs</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">negDifsColumn</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">posDifsColumn</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">rowLets</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">rowNums</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">rowDifs</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">posDifsRow</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">negDifsRow</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">captures</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">finalCaptures</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="c1">// finds all of the moves which are in the same row or in the same column as the rook.</span>
+        <span class="nx">obstructedMoves</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">]</span> <span class="o">==</span> <span class="nx">c</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">]){</span>
+                <span class="nx">sameColumn</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">1</span><span class="p">]</span> <span class="o">==</span> <span class="nx">c</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">1</span><span class="p">]){</span>
+                <span class="nx">sameRow</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">})</span>
+        <span class="c1">//adds to a new array all of the numbers in the obstructed columns. Also converts it to an Integer</span>
+        <span class="nx">sameColumn</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="nx">columnNums</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">1</span><span class="p">]));</span>
+        <span class="p">})</span>        
+        <span class="c1">//elipses is a spread function, basically inputs each value in the array as it&#39;s own parameter. </span>
+        <span class="c1">//this foreach finds the difference between the pieces in the same column and the rooks current position</span>
+        <span class="nx">columnNums</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="nx">columnDifs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span> <span class="o">-</span> <span class="nb">parseInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">1</span><span class="p">]))</span>
+        <span class="p">});</span>
+        <span class="c1">//this foreach defines two new</span>
+        <span class="nx">columnDifs</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">c</span> <span class="o">&lt;</span> <span class="mf">0</span><span class="p">)</span> <span class="nx">negDifsColumn</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">c</span><span class="p">));</span> <span class="k">else</span> <span class="nx">posDifsColumn</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+        <span class="p">})</span>
+        <span class="c1">// finds the minimum positive number and the minimum negative number and converts them to an integer</span>
+        <span class="kd">var</span> <span class="nx">posMinColumn</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(...</span><span class="nx">posDifsColumn</span><span class="p">));</span>
+        <span class="kd">var</span> <span class="nx">negMinColumn</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(...</span><span class="nx">negDifsColumn</span><span class="p">));</span>
+        <span class="c1">// works backwards to find the position on the board given the smallest differences </span>
+        <span class="nx">sameColumn</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">1</span><span class="p">])</span> <span class="o">==</span> <span class="nb">parseInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">1</span><span class="p">])</span> <span class="o">+</span> <span class="nx">posMinColumn</span> <span class="o">||</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">1</span><span class="p">])</span> <span class="o">==</span> <span class="nb">parseInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">1</span><span class="p">])</span> <span class="o">-</span> <span class="nx">negMinColumn</span><span class="p">){</span>
+                <span class="nx">captures</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">})</span>
+        <span class="c1">// basically does all of the same stuff but for the rows using the index of the lettersOnBoard array</span>
+        <span class="nx">sameRow</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="nx">rowLets</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">]);</span>
+        <span class="p">})</span>
+        <span class="nx">rowLets</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="nx">rowNums</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1</span><span class="p">)</span>
+        <span class="p">})</span>
+        <span class="nx">rowNums</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="nx">rowDifs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">])</span> <span class="o">+</span> <span class="mf">1</span><span class="p">))</span>
+        <span class="p">})</span>
+        <span class="nx">rowDifs</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">c</span> <span class="o">&lt;</span> <span class="mf">0</span><span class="p">)</span> <span class="nx">negDifsRow</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">c</span><span class="p">));</span> <span class="k">else</span> <span class="nx">posDifsRow</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+        <span class="p">})</span>
+        <span class="kd">var</span> <span class="nx">posMinRow</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(...</span><span class="nx">posDifsRow</span><span class="p">));</span>
+        <span class="kd">var</span> <span class="nx">negMinRow</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(...</span><span class="nx">negDifsRow</span><span class="p">))</span>
+        <span class="nx">sameRow</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">((</span><span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">])</span> <span class="o">+</span> <span class="mf">1</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">])</span> <span class="o">+</span> <span class="nx">posMinRow</span> <span class="o">+</span> <span class="mf">1</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">])</span> <span class="o">+</span> <span class="mf">1</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">])</span> <span class="o">-</span> <span class="nx">negMinRow</span> <span class="o">+</span> <span class="mf">1</span><span class="p">)){</span>
+                <span class="nx">captures</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">})</span>
+        <span class="c1">//checks if captures are the same color or not</span>
+        <span class="nx">captures</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">chessBoard</span><span class="p">[</span><span class="nx">c</span><span class="p">][</span><span class="mf">0</span><span class="p">].</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">]</span> <span class="o">!=</span> <span class="k">this</span><span class="p">.</span><span class="nx">color</span><span class="p">){</span>
+                <span class="nx">finalCaptures</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="nx">finalCaptures</span>
+    <span class="p">}</span>
+    <span class="nx">getTotalMovesB</span><span class="p">(){</span>
+        <span class="kd">let</span> <span class="nx">currentPosition</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">;</span>
+        <span class="kd">let</span> <span class="nx">movesLToR</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">movesRToL</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">furthestLeft</span> <span class="o">=</span> <span class="nx">currentPosition</span><span class="p">;</span>
+        <span class="kd">let</span> <span class="nx">furthestRight</span> <span class="o">=</span> <span class="nx">currentPosition</span><span class="p">;</span>
+        <span class="kd">let</span> <span class="nx">bruh</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="nx">furthestLeft</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;a&quot;</span> <span class="o">&amp;&amp;</span> <span class="nx">furthestLeft</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mf">1</span><span class="p">){</span>
+            <span class="nx">furthestLeft</span> <span class="o">=</span> <span class="nx">lettersOnBoard</span><span class="p">[</span><span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">furthestLeft</span><span class="p">[</span><span class="mf">0</span><span class="p">])</span> <span class="o">-</span> <span class="mf">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="nx">furthestLeft</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span> <span class="o">-</span> <span class="mf">1</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">while</span> <span class="p">(</span><span class="nx">furthestRight</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;h&quot;</span> <span class="o">&amp;&amp;</span> <span class="nx">furthestRight</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mf">1</span><span class="p">){</span>
+            <span class="nx">furthestRight</span> <span class="o">=</span> <span class="nx">lettersOnBoard</span><span class="p">[</span><span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">furthestRight</span><span class="p">[</span><span class="mf">0</span><span class="p">])</span> <span class="o">+</span> <span class="mf">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="nx">furthestRight</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span> <span class="o">-</span> <span class="mf">1</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mf">8</span> <span class="o">-</span> <span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">furthestLeft</span><span class="p">[</span><span class="mf">0</span><span class="p">])</span> <span class="o">-</span> <span class="nx">furthestLeft</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+            <span class="nx">movesLToR</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">lettersOnBoard</span><span class="p">[</span><span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">furthestLeft</span><span class="p">[</span><span class="mf">0</span><span class="p">])</span> <span class="o">+</span> <span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">furthestLeft</span><span class="p">[</span><span class="mf">1</span><span class="p">])</span> <span class="o">+</span> <span class="nx">i</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mf">2</span> <span class="o">+</span> <span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">furthestRight</span><span class="p">[</span><span class="mf">0</span><span class="p">])</span> <span class="o">-</span> <span class="nx">furthestRight</span><span class="p">[</span><span class="mf">1</span><span class="p">];</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+            <span class="nx">movesRToL</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">lettersOnBoard</span><span class="p">[</span><span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">furthestRight</span><span class="p">[</span><span class="mf">0</span><span class="p">])</span> <span class="o">-</span> <span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">furthestRight</span><span class="p">[</span><span class="mf">1</span><span class="p">])</span> <span class="o">+</span> <span class="nx">i</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="kd">let</span> <span class="nx">totalMovesLToR</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">totalMovesRToL</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="nx">movesLToR</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">c</span> <span class="o">!=</span> <span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">){</span>
+                <span class="nx">totalMovesLToR</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">});</span>
+        <span class="nx">movesRToL</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">c</span> <span class="o">!=</span> <span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">){</span>
+                <span class="nx">totalMovesRToL</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">});</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nx">totalMovesLToR</span><span class="p">,</span> <span class="nx">totalMovesRToL</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="c1">//method to return all of the obstructed moves based on the total moves</span>
+    <span class="nx">getObstructedMovesB</span><span class="p">(){</span>
+        <span class="kd">let</span> <span class="nx">totalMoves</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getTotalMovesB</span><span class="p">();</span>
+        <span class="kd">let</span> <span class="nx">obstructedMovesLToR</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">obstructedMovesRToL</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">blockedMovesLToR</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">blockedMovesRToL</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">index</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1</span>
+        <span class="c1">// Finds the moves which are behind an obstructed move and also finds all of the obstructed moves. Only for left to right. Does it by compating whether the letter + number is higher or lower. </span>
+        <span class="nx">totalMoves</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">blockedMovesLToR</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">c</span><span class="p">)){</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nx">chessBoard</span><span class="p">[</span><span class="nx">c</span><span class="p">][</span><span class="mf">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;OO&quot;</span><span class="p">){</span>
+                    <span class="nx">obstructedMovesLToR</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+                    <span class="nx">index</span><span class="o">++</span>
+                    <span class="nx">totalMoves</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+                        <span class="k">try</span><span class="p">{</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">obstructedMovesLToR</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="mf">1</span><span class="p">])</span> <span class="o">+</span> <span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">obstructedMovesLToR</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="mf">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="nb">parseInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">[</span><span class="mf">1</span><span class="p">])</span> <span class="o">+</span> <span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">obstructedMovesLToR</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="mf">0</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">c</span><span class="p">[</span><span class="mf">1</span><span class="p">])</span> <span class="o">+</span> <span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">c</span><span class="p">[</span><span class="mf">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">obstructedMovesLToR</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="mf">1</span><span class="p">])</span> <span class="o">+</span> <span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">obstructedMovesLToR</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="mf">0</span><span class="p">])){</span>
+                                <span class="nx">blockedMovesLToR</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span>
+                            <span class="p">}</span>
+                            <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">obstructedMovesLToR</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="mf">1</span><span class="p">]</span> <span class="o">+</span> <span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">obstructedMovesLToR</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="mf">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span> <span class="o">+</span> <span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">obstructedMovesLToR</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="mf">0</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nx">c</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span> <span class="o">+</span> <span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">c</span><span class="p">[</span><span class="mf">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="nx">obstructedMovesLToR</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="mf">1</span><span class="p">]</span> <span class="o">+</span> <span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">obstructedMovesLToR</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="mf">0</span><span class="p">])){</span>
+                                <span class="nx">blockedMovesLToR</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span>
+                            <span class="p">}</span>
+                        <span class="p">}</span> <span class="k">catch</span><span class="p">{}</span>
+                    <span class="p">})</span>
+                <span class="p">}</span> 
+            <span class="p">}</span>
+        <span class="p">})</span>
+        <span class="nx">index</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1</span>
+        <span class="c1">// Finds the moves which are behind an obstructed move and also finds all of the obstructed moves. Only for right to left. Does it by finding whether the number is bigger or smaller (realized I was being dumb before but i&#39;m not changing the old code. Because it&#39;s only one diaganol though you can easily find if its blocked just by the number.)</span>
+        <span class="nx">totalMoves</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">blockedMovesRToL</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">c</span><span class="p">)){</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nx">chessBoard</span><span class="p">[</span><span class="nx">c</span><span class="p">][</span><span class="mf">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;OO&quot;</span><span class="p">){</span>
+                    <span class="nx">obstructedMovesRToL</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+                    <span class="nx">index</span><span class="o">++</span>
+                    <span class="nx">totalMoves</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+                        <span class="k">try</span><span class="p">{</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">c</span><span class="p">[</span><span class="mf">1</span><span class="p">])</span> <span class="o">&gt;</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">obstructedMovesRToL</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="mf">1</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">obstructedMovesRToL</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="mf">1</span><span class="p">])</span> <span class="o">&gt;</span> <span class="nb">parseInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">[</span><span class="mf">1</span><span class="p">])){</span>
+                                <span class="nx">blockedMovesRToL</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span>
+                            <span class="p">}</span>
+                            <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">c</span><span class="p">[</span><span class="mf">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">obstructedMovesRToL</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="mf">1</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">obstructedMovesRToL</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="mf">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="nb">parseInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">[</span><span class="mf">1</span><span class="p">])){</span>
+                                <span class="nx">blockedMovesRToL</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span>
+                            <span class="p">}</span>
+                        <span class="p">}</span> <span class="k">catch</span><span class="p">{}</span>
+                    <span class="p">})</span>
+                <span class="p">}</span> 
+            <span class="p">}</span>
+        <span class="p">})</span>
+        <span class="c1">//seperates the obstructed moves and the blocked moves and returns both. </span>
+        <span class="kd">let</span> <span class="nx">obstructedMoves</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nx">obstructedMovesLToR</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">[</span><span class="nx">obstructedMoves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">)])</span>
+        <span class="nx">obstructedMovesRToL</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">[</span><span class="nx">obstructedMoves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">)])</span>
+        <span class="kd">let</span> <span class="nx">blockedMoves</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nx">blockedMovesLToR</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span><span class="nx">blockedMoves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);})</span>
+        <span class="nx">blockedMovesRToL</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span><span class="nx">blockedMoves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);})</span>
+        <span class="nx">obstructedMoves</span> <span class="o">=</span> <span class="nx">obstructedMoves</span><span class="p">.</span><span class="nx">filter</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="o">!</span><span class="nx">blockedMoves</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">c</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nx">obstructedMoves</span><span class="p">,</span> <span class="nx">blockedMoves</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="c1">//method to return all of the moves which are not obstructed</span>
+    <span class="nx">getFreeMovesB</span><span class="p">(){</span>
+        <span class="kd">let</span> <span class="nx">totalMoves</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getTotalMovesB</span><span class="p">()[</span><span class="mf">0</span><span class="p">];</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">getTotalMovesB</span><span class="p">()[</span><span class="mf">1</span><span class="p">].</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span><span class="nx">totalMoves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">)})</span>
+        <span class="kd">let</span> <span class="nx">obstructedMoves</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getObstructedMovesB</span><span class="p">()[</span><span class="mf">0</span><span class="p">];</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">getObstructedMovesB</span><span class="p">()[</span><span class="mf">1</span><span class="p">].</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span><span class="nx">obstructedMoves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">)})</span>
+        <span class="nx">totalMoves</span> <span class="o">=</span> <span class="nx">totalMoves</span><span class="p">.</span><span class="nx">filter</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="o">!</span><span class="nx">obstructedMoves</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span> <span class="p">);</span>
+        <span class="k">return</span> <span class="nx">totalMoves</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">//method to return the pieces which can be captured. </span>
+    <span class="nx">getAvailableCapturesB</span><span class="p">(){</span>
+        <span class="kd">let</span> <span class="nx">finalCaptures</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">obstructedMoves</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getObstructedMovesB</span><span class="p">()[</span><span class="mf">0</span><span class="p">]</span>
+        <span class="nx">obstructedMoves</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">chessBoard</span><span class="p">[</span><span class="nx">c</span><span class="p">][</span><span class="mf">0</span><span class="p">][</span><span class="mf">0</span><span class="p">]</span> <span class="o">!=</span> <span class="k">this</span><span class="p">.</span><span class="nx">color</span><span class="p">)</span> <span class="p">{</span><span class="nx">finalCaptures</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">)}</span>
+        <span class="p">})</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">finalCaptures</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nx">finalCaptures</span>
+    <span class="p">}</span>
+    <span class="nx">getFreeMoves</span><span class="p">(){</span>
+        <span class="kd">let</span> <span class="nx">getFreeMovesB</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getFreeMovesB</span><span class="p">()</span>
+        <span class="kd">let</span> <span class="nx">getFreeMovesR</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getFreeMovesR</span><span class="p">()</span>
+        <span class="kd">let</span> <span class="nx">freeMoves</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nx">getFreeMovesB</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">freeMoves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">))</span>
+        <span class="nx">getFreeMovesR</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">freeMoves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nx">freeMoves</span>
+    <span class="p">}</span>
+    <span class="nx">getAvailableCaptures</span><span class="p">(){</span>
+        <span class="kd">let</span> <span class="nx">getAvailableCapturesB</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getAvailableCapturesB</span><span class="p">()</span>
+        <span class="kd">let</span> <span class="nx">getAvailableCapturesR</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getAvailableCapturesR</span><span class="p">()</span>
+        <span class="kd">let</span> <span class="nx">captures</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nx">getAvailableCapturesB</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">captures</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">))</span>
+        <span class="nx">getAvailableCapturesR</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">captures</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nx">captures</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nx">queen1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">queen</span><span class="p">(</span><span class="s2">&quot;d1&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+<span class="nx">setBoard</span><span class="p">(</span><span class="nx">queen1</span><span class="p">)</span>
+
+<span class="nx">printMoves</span><span class="p">(</span><span class="s2">&quot;d1&quot;</span><span class="p">)</span>
+
+<span class="kd">function</span> <span class="nx">setBoard</span><span class="p">(</span><span class="nx">obj</span><span class="p">){</span>
+    <span class="nx">chessBoard</span><span class="p">[</span><span class="nx">obj</span><span class="p">.</span><span class="nx">position</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nx">obj</span><span class="p">.</span><span class="nx">color</span> <span class="o">+</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="nx">obj</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">movePiece</span><span class="p">(</span><span class="nx">currentM</span><span class="p">,</span> <span class="nx">newM</span><span class="p">){</span>
+    <span class="nx">chessBoard</span><span class="p">[</span><span class="nx">currentM</span><span class="p">][</span><span class="mf">1</span><span class="p">].</span><span class="nx">move</span><span class="p">(</span><span class="nx">newM</span><span class="p">,</span> <span class="nx">currentM</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">printMoves</span><span class="p">(</span><span class="nx">current</span><span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">chessBoard</span><span class="p">[</span><span class="nx">current</span><span class="p">][</span><span class="mf">1</span><span class="p">].</span><span class="nx">getAvailableMoves</span><span class="p">())</span>
+<span class="p">}</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[]
+[ &#39;e2&#39;,
+  &#39;f3&#39;,
+  &#39;g4&#39;,
+  &#39;h5&#39;,
+  &#39;c2&#39;,
+  &#39;b3&#39;,
+  &#39;a4&#39;,
+  &#39;d2&#39;,
+  &#39;d3&#39;,
+  &#39;d4&#39;,
+  &#39;d5&#39;,
+  &#39;d6&#39;,
+  &#39;d7&#39;,
+  &#39;d8&#39;,
+  &#39;a1&#39;,
+  &#39;b1&#39;,
+  &#39;c1&#39;,
+  &#39;e1&#39;,
+  &#39;f1&#39;,
+  &#39;g1&#39;,
+  &#39;h1&#39; ]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
 <div class=" highlight hl-javascript"><pre><span></span><span class="kr">class</span> <span class="nx">bishop</span> <span class="kr">extends</span> <span class="nx">piece</span><span class="p">{</span>
     
     <span class="nx">constructor</span><span class="p">(</span><span class="nx">_position</span><span class="p">,</span> <span class="nx">_color</span><span class="p">){</span>
@@ -414,7 +755,7 @@ layout: notebook
 OO OO OO OO OO OO OO OO 
 OO OO OO OO OO OO OO OO 
 OO OO OO OO bP OO OO OO 
-OO OO OO wB OO OO OO OO 
+wQ OO OO wB OO OO OO OO 
 OO OO bB OO bB OO OO OO 
 OO OO OO OO OO OO OO OO 
 bB OO OO OO OO OO OO OO 
@@ -438,16 +779,17 @@ OO OO OO OO OO OO OO OO </pre>
 <div class=" highlight hl-javascript"><pre><span></span><span class="kr">class</span> <span class="nx">king</span> <span class="kr">extends</span> <span class="nx">piece</span><span class="p">{</span>
     <span class="nx">constructor</span><span class="p">(</span><span class="nx">_position</span><span class="p">,</span> <span class="nx">_color</span><span class="p">){</span>
         <span class="kr">super</span><span class="p">(</span><span class="nx">_position</span><span class="p">,</span> <span class="nx">_color</span><span class="p">);</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="s2">&quot;K&quot;</span><span class="p">;</span>
-        <span class="p">}</span>
-<span class="c1">//method to return all of the available moves that the piece can make. </span>
-<span class="nx">getTotalMoves</span><span class="p">(){</span>
-    <span class="kd">let</span> <span class="nx">currentPosition</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
-    <span class="kd">let</span> <span class="nx">moves</span> <span class="o">=</span> <span class="p">[];</span>
-    <span class="kd">let</span> <span class="nx">aboveNum</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">currentPosition</span><span class="p">[</span><span class="mf">1</span><span class="p">])</span> <span class="o">+</span> <span class="mf">1</span>
-    <span class="kd">let</span> <span class="nx">currentLetNum</span> <span class="o">=</span> <span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">currentPosition</span><span class="p">[</span><span class="mf">0</span><span class="p">])</span>  
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="mf">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
-        <span class="k">if</span> <span class="p">((</span><span class="nx">aboveNum</span> <span class="o">!=</span> <span class="mf">9</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">((</span><span class="nx">currentLetNum</span> <span class="o">+</span> <span class="nx">i</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">8</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">currentLetNum</span> <span class="o">+</span> <span class="nx">i</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mf">1</span><span class="p">){</span>
+        <span class="c1">// automatically sets the spot on the board which is passed in to this rook</span>
+    <span class="p">}</span>
+    <span class="c1">//method to return all of the available moves that the piece can make. </span>
+    <span class="nx">getTotalMoves</span><span class="p">(){</span>
+        <span class="kd">let</span> <span class="nx">currentPosition</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+        <span class="kd">let</span> <span class="nx">moves</span> <span class="o">=</span> <span class="p">[];</span>
+
+        <span class="kd">let</span> <span class="nx">aboveNum</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">currentPosition</span><span class="p">[</span><span class="mf">1</span><span class="p">])</span> <span class="o">+</span> <span class="mf">1</span>
+        <span class="kd">let</span> <span class="nx">currentLetNum</span> <span class="o">=</span> <span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">currentPosition</span><span class="p">[</span><span class="mf">0</span><span class="p">])</span>
+        
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="mf">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
             <span class="nx">moves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">lettersOnBoard</span><span class="p">[</span><span class="nx">currentLetNum</span> <span class="o">+</span> <span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="nx">aboveNum</span><span class="p">);</span>
         <span class="p">}</span>
     <span class="p">}</span>
@@ -456,62 +798,112 @@ OO OO OO OO OO OO OO OO </pre>
         <span class="k">if</span> <span class="p">((</span><span class="nx">belowNum</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">((</span><span class="nx">currentLetNum</span> <span class="o">+</span> <span class="nx">i</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">8</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">currentLetNum</span> <span class="o">+</span> <span class="nx">i</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mf">1</span><span class="p">){</span>
             <span class="nx">moves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">lettersOnBoard</span><span class="p">[</span><span class="nx">currentLetNum</span> <span class="o">+</span> <span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="nx">belowNum</span><span class="p">);</span>
         <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="kd">let</span> <span class="nx">sameNum</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">currentPosition</span><span class="p">[</span><span class="mf">1</span><span class="p">])</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="mf">1</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">){</span>
-        <span class="k">if</span> <span class="p">((</span><span class="nx">i</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">((</span><span class="nx">currentLetNum</span> <span class="o">+</span> <span class="nx">i</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">8</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">currentLetNum</span> <span class="o">+</span> <span class="nx">i</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mf">1</span><span class="p">){</span>
-            <span class="nx">moves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">lettersOnBoard</span><span class="p">[</span><span class="nx">currentLetNum</span> <span class="o">+</span> <span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="nx">sameNum</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="nx">moves</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="c1">//method to return all of the obstructed moves based on the total moves</span>
-<span class="nx">getObstructedMoves</span><span class="p">(){</span>
-    <span class="kd">let</span> <span class="nx">totalMoves</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getTotalMoves</span><span class="p">();</span>
-    <span class="kd">let</span> <span class="nx">obstructedMoves</span> <span class="o">=</span> <span class="p">[];</span>
+        
+        <span class="kd">let</span> <span class="nx">sameNum</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">currentPosition</span><span class="p">[</span><span class="mf">1</span><span class="p">])</span>
 
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">totalMoves</span><span class="p">)</span>
-    <span class="nx">totalMoves</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">chessBoard</span><span class="p">[</span><span class="nx">c</span><span class="p">][</span><span class="mf">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;OO&quot;</span><span class="p">){</span>
-            <span class="nx">obstructedMoves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">})</span>
-    <span class="k">return</span> <span class="nx">obstructedMoves</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="c1">//method to return all of the moves which are not obstructed</span>
-<span class="nx">getFreeMoves</span><span class="p">(){</span>
-    <span class="kd">let</span> <span class="nx">totalMoves</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getTotalMoves</span><span class="p">();</span>
-    <span class="kd">let</span> <span class="nx">obstructedMoves</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getObstructedMoves</span><span class="p">();</span>
-    <span class="nx">totalMoves</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-        <span class="c1">//console.log(c);</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">obstructedMoves</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">++</span><span class="p">){</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nx">c</span> <span class="o">==</span> <span class="nx">obstructedMoves</span><span class="p">[</span><span class="nx">i</span><span class="p">]){</span>
-                <span class="nx">totalMoves</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="nx">totalMoves</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">c</span><span class="p">),</span> <span class="mf">1</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="mf">1</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">){</span>
+                <span class="nx">moves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">lettersOnBoard</span><span class="p">[</span><span class="nx">currentLetNum</span> <span class="o">+</span> <span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="nx">sameNum</span><span class="p">);</span>
             <span class="p">}</span>
         <span class="p">}</span>
-    <span class="p">})</span>
-    <span class="k">return</span> <span class="nx">totalMoves</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="nx">getAvailableCaptures</span><span class="p">(){</span>
-    <span class="kd">let</span> <span class="nx">captures</span> <span class="o">=</span> <span class="p">[];</span>
-    <span class="kd">let</span> <span class="nx">obstructed</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getObstructedMoves</span><span class="p">()</span>
-    <span class="nx">obstructed</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">chessBoard</span><span class="p">[</span><span class="nx">c</span><span class="p">][</span><span class="mf">0</span><span class="p">][</span><span class="mf">1</span><span class="p">]</span> <span class="o">!=</span> <span class="k">this</span><span class="p">.</span><span class="nx">color</span><span class="p">){</span>
-            <span class="nx">captures</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+
+        <span class="k">return</span> <span class="nx">moves</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">//method to return all of the obstructed moves based on the total moves</span>
+    <span class="nx">getObstructedMoves</span><span class="p">(){</span>
+        <span class="kd">let</span> <span class="nx">totalMoves</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getTotalMoves</span><span class="p">();</span>
+        <span class="kd">let</span> <span class="nx">obstructedMoves</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">totalMoves</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">chessBoard</span><span class="p">[</span><span class="nx">totalMoves</span><span class="p">[</span><span class="nx">i</span><span class="p">]][</span><span class="mf">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;OO&quot;</span><span class="p">){</span>
+                <span class="nx">obstructedMoves</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">totalMoves</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+            <span class="p">}</span>
         <span class="p">}</span>
-    <span class="p">})</span>
-<span class="k">return</span> <span class="nx">captures</span>
-<span class="p">}</span>
+        <span class="k">return</span> <span class="nx">obstructedMoves</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">//method to return all of the moves which are not obstructed</span>
+    <span class="nx">getFreeMoves</span><span class="p">(){</span>
+        <span class="kd">let</span> <span class="nx">totalMoves</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getTotalMoves</span><span class="p">();</span>
+        <span class="kd">let</span> <span class="nx">obstructedMoves</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getObstructedMoves</span><span class="p">();</span>
+
+        <span class="nx">totalMoves</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="c1">//console.log(c);</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">obstructedMoves</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">++</span><span class="p">){</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nx">c</span> <span class="o">==</span> <span class="nx">obstructedMoves</span><span class="p">[</span><span class="nx">i</span><span class="p">]){</span>
+                    <span class="nx">totalMoves</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="nx">totalMoves</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">c</span><span class="p">),</span> <span class="mf">1</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">})</span>
+
+        <span class="k">return</span> <span class="nx">totalMoves</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+
+    <span class="c1">//method to return the pieces which can be captured. </span>
+    <span class="nx">getAvailableCaptures</span><span class="p">(){</span>
+        <span class="c1">// defines new variables as other methods in this class which may be useful.</span>
+        <span class="kd">let</span> <span class="nx">totalMoves</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getTotalMoves</span><span class="p">();</span>
+        <span class="kd">let</span> <span class="nx">obstructedMoves</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getObstructedMoves</span><span class="p">();</span>
+        <span class="c1">// defines arrays</span>
+        <span class="kd">let</span> <span class="nx">sameRow</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">sameColumn</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">columnNums</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">columnDifs</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">negDifsColumn</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">posDifsColumn</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">rowLets</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">rowNums</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">rowDifs</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">posDifsRow</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">negDifsRow</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">captures</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">let</span> <span class="nx">finalCaptures</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="c1">// finds all of the moves which are in the same row or in the same column as the rook.</span>
+        <span class="nx">obstructedMoves</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">]</span> <span class="o">==</span> <span class="nx">c</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">]){</span>
+                <span class="nx">sameColumn</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">1</span><span class="p">]</span> <span class="o">==</span> <span class="nx">c</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">1</span><span class="p">]){</span>
+                <span class="nx">sameRow</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">})</span>
+        <span class="c1">//adds to a new array all of the numbers in the obstructed columns. Also converts it to an Integer</span>
+        <span class="nx">sameColumn</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="nx">columnNums</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">1</span><span class="p">]));</span>
+        <span class="p">})</span>        
+        <span class="c1">//elipses is a spread function, basically inputs each value in the array as it&#39;s own parameter. </span>
+        <span class="c1">//this foreach finds the difference between the pieces in the same column and the rooks current position</span>
+        <span class="nx">columnNums</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span><span class="nx">columnDifs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span> <span class="o">-</span> <span class="nb">parseInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">1</span><span class="p">]))});</span>
+        <span class="c1">//this foreach defines two new</span>
+        <span class="nx">columnDifs</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span><span class="k">if</span> <span class="p">(</span><span class="nx">c</span> <span class="o">&lt;</span> <span class="mf">0</span><span class="p">)</span> <span class="nx">negDifsColumn</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">c</span><span class="p">));</span> <span class="k">else</span> <span class="nx">posDifsColumn</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);})</span>
+        <span class="c1">// finds the minimum positive number and the minimum negative number and converts them to an integer</span>
+        <span class="kd">var</span> <span class="nx">posMinColumn</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(...</span><span class="nx">posDifsColumn</span><span class="p">));</span>
+        <span class="kd">var</span> <span class="nx">negMinColumn</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(...</span><span class="nx">negDifsColumn</span><span class="p">));</span>
+        <span class="c1">// works backwards to find the position on the board given the smallest differences </span>
+        <span class="nx">sameColumn</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span><span class="k">if</span> <span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">1</span><span class="p">])</span> <span class="o">==</span> <span class="nb">parseInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">1</span><span class="p">])</span> <span class="o">+</span> <span class="nx">posMinColumn</span> <span class="o">||</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">1</span><span class="p">])</span> <span class="o">==</span> <span class="nb">parseInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">1</span><span class="p">])</span> <span class="o">-</span> <span class="nx">negMinColumn</span><span class="p">){</span><span class="nx">captures</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">)}})</span>
+        <span class="c1">// basically does all of the same stuff but for the rows using the index of the lettersOnBoard array</span>
+        <span class="nx">sameRow</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span><span class="nx">rowLets</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">]);})</span>
+        <span class="nx">rowLets</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span><span class="nx">rowNums</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1</span><span class="p">)})</span>
+        <span class="nx">rowNums</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span><span class="nx">rowDifs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">])</span> <span class="o">+</span> <span class="mf">1</span><span class="p">))})</span>
+        <span class="nx">rowDifs</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span><span class="k">if</span> <span class="p">(</span><span class="nx">c</span> <span class="o">&lt;</span> <span class="mf">0</span><span class="p">)</span> <span class="nx">negDifsRow</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">c</span><span class="p">));</span> <span class="k">else</span> <span class="nx">posDifsRow</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);})</span>
+        <span class="kd">var</span> <span class="nx">posMinRow</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(...</span><span class="nx">posDifsRow</span><span class="p">));</span>
+        <span class="kd">var</span> <span class="nx">negMinRow</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(...</span><span class="nx">negDifsRow</span><span class="p">))</span>
+        <span class="nx">sameRow</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span><span class="k">if</span> <span class="p">((</span><span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">])</span> <span class="o">+</span> <span class="mf">1</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">])</span> <span class="o">+</span> <span class="nx">posMinRow</span> <span class="o">+</span> <span class="mf">1</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">])</span> <span class="o">+</span> <span class="mf">1</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="nx">lettersOnBoard</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">])</span> <span class="o">-</span> <span class="nx">negMinRow</span> <span class="o">+</span> <span class="mf">1</span><span class="p">)){</span><span class="nx">captures</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">)}})</span>
+        <span class="c1">//checks if captures are the same color or not</span>
+        <span class="nx">captures</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">chessBoard</span><span class="p">[</span><span class="nx">c</span><span class="p">].</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">]</span> <span class="o">!=</span> <span class="k">this</span><span class="p">.</span><span class="nx">color</span><span class="p">){</span>
+                <span class="nx">finalCaptures</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="nx">finalCaptures</span>
+    <span class="p">}</span>
+    
 <span class="p">}</span>
 
-<span class="kd">let</span> <span class="nx">king1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">king</span> <span class="p">(</span><span class="s2">&quot;e1&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
-<span class="nx">setBoard</span><span class="p">(</span><span class="nx">king1</span><span class="p">)</span>
+<span class="kd">let</span> <span class="nx">king1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">king</span><span class="p">(</span><span class="s2">&quot;d5&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">);</span>
 
-<span class="nx">king1</span><span class="p">.</span><span class="nx">getObstructedMoves</span><span class="p">()</span>
-
-<span class="kd">function</span> <span class="nx">setBoard</span><span class="p">(</span><span class="nx">obj</span><span class="p">){</span>
-    <span class="nx">chessBoard</span><span class="p">[</span><span class="nx">obj</span><span class="p">.</span><span class="nx">position</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nx">obj</span><span class="p">.</span><span class="nx">color</span> <span class="o">+</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="nx">obj</span><span class="p">]</span>
-<span class="p">}</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">king1</span><span class="p">.</span><span class="nx">getObstructedMoves</span><span class="p">())</span>
 </pre></div>
 
     </div>
@@ -524,7 +916,7 @@ OO OO OO OO OO OO OO OO </pre>
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[ &#39;d2&#39;, &#39;e2&#39;, &#39;f2&#39;, &#39;d1&#39;, &#39;f1&#39; ]
+<pre>[ &#39;d4&#39;, &#39;d2&#39;, &#39;e2&#39;, &#39;f2&#39;, &#39;d1&#39;, &#39;f1&#39; ]
 </pre>
 </div>
 </div>
