@@ -113,6 +113,7 @@ window.onload = wrap_img;
             .chess-board .letnum {background: #FFFFFF; font-size: 35px; padding: 1em;}
         </style>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     </head>
     <body>
         <table class="chess-board" id="chess-board">
@@ -642,7 +643,7 @@ window.onload = wrap_img;
                 rowLets.forEach((c) => {
                     rowNums.push(lettersOnBoard.indexOf(c) + 1)
                 })
-                rowNums.forEach((c) => {
+                rowNums.forEach((c) => { 
                     rowDifs.push(parseInt(c) - (lettersOnBoard.indexOf(this.position.split("")[0]) + 1))
                 })
                 rowDifs.forEach((c) => {
@@ -657,7 +658,7 @@ window.onload = wrap_img;
                 })
                 //checks if captures are the same color or not
                 captures.forEach((c) => {
-                    if (chessBoard[c][0].split("")[0] != this.color){
+                    if (chessBoard[c][0][0].split("")[0] != this.color){
                         finalCaptures.push(c);
                     }
                 })
@@ -719,6 +720,79 @@ window.onload = wrap_img;
                 return captures;
             }
         }
+        class king extends piece{
+            constructor(_position, _color){
+                super(_position, _color);
+                this.id = "K";
+                }
+            //method to return all of the available moves that the piece can make. 
+            getTotalMoves(){
+                let currentPosition = this.position.split("");
+                let moves = [];
+                let aboveNum = parseInt(currentPosition[1]) + 1
+                let currentLetNum = lettersOnBoard.indexOf(currentPosition[0])  
+                for (var i = -1; i <= 1; i++){
+                    moves.push(lettersOnBoard[currentLetNum + i] + aboveNum);
+                }
+                let belowNum = parseInt(currentPosition[1]) - 1
+                for (var i = -1; i <= 1; i++){
+                    moves.push(lettersOnBoard[currentLetNum + i] + belowNum);
+                }
+                let sameNum = parseInt(currentPosition[1])
+                for (var i = -1; i <= 1;i++){
+                    if (i != 0){
+                        moves.push(lettersOnBoard[currentLetNum + i] + sameNum);
+                    }
+                }
+                return moves;
+            }
+            //method to return all of the obstructed moves based on the total moves
+            getObstructedMoves(){
+                let totalMoves = this.getTotalMoves();
+                let obstructedMoves = [];
+                totalMoves.forEach((c) => {
+                    if (chessBoard[c][0] != "OO"){
+                        obstructedMoves.push(c);
+                    }
+                })
+                return obstructedMoves;
+            }
+            //method to return all of the moves which are not obstructed
+            getFreeMoves(){
+                let totalMoves = this.getTotalMoves();
+                let obstructedMoves = this.getObstructedMoves();
+                totalMoves = totalMoves.filter( (c) => !obstructedMoves.includes(c) );
+                return totalMoves;
+            }
+            getAvailableCaptures(){
+                let captures = [];
+                let currentPosition = this.position.split(""); 
+                let possibleLets = [
+                    lettersOnBoard[lettersOnBoard.indexOf(currentPosition[0]) - 1],
+                    lettersOnBoard[lettersOnBoard.indexOf(currentPosition[0]) + 1],
+                    lettersOnBoard[lettersOnBoard.indexOf(currentPosition[0]) + 1]
+                ];
+            possibleLets = possibleLets.filter(c => c != undefined);
+            possibleLets.forEach((c) => {
+                let a = parseInt(currentPosition[1]) + (1 * this.direction);
+                let check = c + a
+                if (chessBoard[check][0][0] != this.color && chessBoard[check][0] != "OO"){
+                        captures.push(check);
+                }
+                let b = parseInt(currentPosition[1]) - (1 * this.direction)
+                let check1 = c + b
+                if (chessBoard[check1][0][0] != this.color && chessBoard[check1][0] != "OO"){
+                                captures.push(check1);
+                }
+                let d = parseInt(currentPosition[1])
+                let check2 = c + d
+                if (chessBoard[check2][0][0] != this.color && chessBoard[check2][0] != "OO"){
+                                captures.push(check2);
+                }
+            })
+            return captures;
+        }
+    }
         class bishop extends piece{
             constructor(_position, _color){
                 // super is the position constructor, uh basically does some super cool inheritence stuff or something. 
