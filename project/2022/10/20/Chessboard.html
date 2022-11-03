@@ -779,14 +779,15 @@ window.onload = wrap_img;
                 possibleLets = possibleLets.filter(c => c != undefined);
                 possibleLets.forEach((c) => {
                     let a = parseInt(currentPosition[1]) + (1);
-                        if ((currentPosition[1]) + 1 != 9){
+                        if (a != 9){
                             let check = c + a
+                            console.log(check)
                             if (chessBoard[check][0][0] != this.color && chessBoard[check][0] != "OO"){
                                 captures.push(check);
                         }
                     }
                     let b = parseInt(currentPosition[1]) - (1)
-                        if ((currentPosition[1]) - 1 != 0){
+                        if (b != 0){
                             let check1 = c + b
                             console.log(check1)
                             if (chessBoard[check1][0][0] != this.color && chessBoard[check1][0] != "OO"){
@@ -1046,7 +1047,7 @@ window.onload = wrap_img;
         setBoard(pawnb8)
         let kingw = new king ("e1", "w")
         setBoard(kingw)
-        let kingb = new king ("d8", "w")
+        let kingb = new king ("e8", "b")
         setBoard(kingb)
         //puts the pieces on the board
         putBoard()
