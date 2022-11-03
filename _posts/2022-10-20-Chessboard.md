@@ -27,7 +27,7 @@ title: Chess
         <table class="chess-board" id="chess-board">
             <tbody>
                 <tr>
-                    <th></th>
+                    <th class="letnum"></th>
                     <th class="letnum">a</th>
                     <th class="letnum">b</th>
                     <th class="letnum">c</th>
