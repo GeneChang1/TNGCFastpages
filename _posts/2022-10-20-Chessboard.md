@@ -19,6 +19,7 @@ title: Chess
             .chess-board .light { background: #FFFFFF; }
             .chess-board .dark { background: #808080; }
             .chess-board .selected { background: #f0ff00; }
+            .chess-board .letnum {background: #FFFFFF; }
         </style>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     </head>
@@ -804,7 +805,7 @@ title: Chess
             wB: "♗",
             wQ: "♕",
             wK: "♔",
-            OO: "",
+            OO: "ㅤ",
             bP: "♟",
             bR: "♜",
             bN: "♞",
