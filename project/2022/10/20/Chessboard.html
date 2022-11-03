@@ -732,15 +732,19 @@ window.onload = wrap_img;
                 let aboveNum = parseInt(currentPosition[1]) + 1
                 let currentLetNum = lettersOnBoard.indexOf(currentPosition[0])  
                 for (var i = -1; i <= 1; i++){
-                    moves.push(lettersOnBoard[currentLetNum + i] + aboveNum);
+                    if (currentLetNum + i != -1 && currentLetNum + i != 7 && aboveNum != 9){
+                        moves.push(lettersOnBoard[currentLetNum + i] + aboveNum);
+                    }
                 }
                 let belowNum = parseInt(currentPosition[1]) - 1
                 for (var i = -1; i <= 1; i++){
-                    moves.push(lettersOnBoard[currentLetNum + i] + belowNum);
+                    if (currentLetNum + i != -1 && currentLetNum + i != 7 && belowNum != 0){
+                        moves.push(lettersOnBoard[currentLetNum + i] + belowNum);
+                    }    
                 }
                 let sameNum = parseInt(currentPosition[1])
                 for (var i = -1; i <= 1;i++){
-                    if (i != 0){
+                    if (i != 0 && currentLetNum + i != -1 && currentLetNum + i != 7){
                         moves.push(lettersOnBoard[currentLetNum + i] + sameNum);
                     }
                 }
@@ -770,27 +774,32 @@ window.onload = wrap_img;
                 let possibleLets = [
                     lettersOnBoard[lettersOnBoard.indexOf(currentPosition[0]) - 1],
                     lettersOnBoard[lettersOnBoard.indexOf(currentPosition[0]) + 1],
-                    lettersOnBoard[lettersOnBoard.indexOf(currentPosition[0]) + 1]
+                    lettersOnBoard[lettersOnBoard.indexOf(currentPosition[0])]
                 ];
-            possibleLets = possibleLets.filter(c => c != undefined);
-            possibleLets.forEach((c) => {
-                let a = parseInt(currentPosition[1]) + (1 * this.direction);
-                let check = c + a
-                if (chessBoard[check][0][0] != this.color && chessBoard[check][0] != "OO"){
-                        captures.push(check);
-                }
-                let b = parseInt(currentPosition[1]) - (1 * this.direction)
-                let check1 = c + b
-                if (chessBoard[check1][0][0] != this.color && chessBoard[check1][0] != "OO"){
+                possibleLets = possibleLets.filter(c => c != undefined);
+                possibleLets.forEach((c) => {
+                    let a = parseInt(currentPosition[1]) + (1);
+                        if ((currentPosition[1]) + 1 != 9){
+                            let check = c + a
+                            if (chessBoard[check][0][0] != this.color && chessBoard[check][0] != "OO"){
+                                captures.push(check);
+                        }
+                    }
+                    let b = parseInt(currentPosition[1]) - (1)
+                        if ((currentPosition[1]) - 1 != 0){
+                            let check1 = c + b
+                            console.log(check1)
+                            if (chessBoard[check1][0][0] != this.color && chessBoard[check1][0] != "OO"){
                                 captures.push(check1);
-                }
-                let d = parseInt(currentPosition[1])
-                let check2 = c + d
-                if (chessBoard[check2][0][0] != this.color && chessBoard[check2][0] != "OO"){
-                                captures.push(check2);
-                }
-            })
-            return captures;
+                        }
+                    }
+                    let d = parseInt(currentPosition[1])
+                    let check2 = c + d
+                    if (chessBoard[check2][0][0] != this.color && chessBoard[check2][0] != "OO"){
+                        captures.push(check2);
+                    }
+                })
+                return captures;
         }
     }
         class bishop extends piece{
@@ -1035,6 +1044,8 @@ window.onload = wrap_img;
         setBoard(pawnb7)
         let pawnb8 = new pawn("h7", "b")
         setBoard(pawnb8)
+        let kingw = new king ("e1", "w")
+        setBoard(kingw)
         //puts the pieces on the board
         putBoard()
         //function to add the board to the table
