@@ -104,13 +104,13 @@ window.onload = wrap_img;
         <title></title>
         <meta charset="UTF-8" />
         <style>
-            .chess-board { border-spacing: 0; border-collapse: collapse; margin-left: 0%; margin-right: 5%;}
+            .chess-board { border-spacing: 0; border-collapse: collapse; width: 0%;}
             .chess-board th { padding: 2em; }
             .chess-board td { border: 1px solid; width: 1em; height: 1em; text-align: center;}
             .chess-board .light { background: #FFFFFF; }
             .chess-board .dark { background: #808080; }
             .chess-board .selected { background: #f0ff00; }
-            .chess-board .letnum {background: #FFFFFF; font-size: 50px; padding: 1em;}
+            .chess-board .letnum {background: #FFFFFF; font-size: 35px; padding: 1em;}
         </style>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     </head>
@@ -861,8 +861,7 @@ window.onload = wrap_img;
         let moving = false;
         function putOnBoard(id) {
             document.getElementById(id).innerHTML = chessPieces[chessBoard[id][0].split("")[0]+chessBoard[id][0].split("")[1]];
-            document.getElementById(id).style.fontSize = "100px";
-            document.getElementById(id).size = "10px";
+            document.getElementById(id).style.fontSize = "60px";
             try{document.getElementById(id).classList.remove('selected')}catch{}
             if (id.split("")[1] == "1") color = !color;
             if (color){document.getElementById(id).classList.add('dark');}
