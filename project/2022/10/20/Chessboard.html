@@ -665,6 +665,79 @@ window.onload = wrap_img;
                 return finalCaptures
             }
         }
+                class knight extends piece{
+            constructor(_position, _color){
+                super(_position, _color);
+                this.id = "N";
+                }
+            //method to return all of the available moves that the piece can make. 
+            getTotalMoves(){
+                let currentPosition = this.position.split("");
+                let moves = [];
+                let aboveNum2 = parseInt(currentPosition[1]) + 2
+                let currentLetNum = lettersOnBoard.indexOf(currentPosition[0])  
+                for (var i = -1; i <= 1; i++){
+                    if (currentLetNum + i != -1 && currentLetNum + i != 7 && aboveNum2 != 9 && aboveNum2 != 10){
+                        if (currentLetNum + i > -1 && currentLetNum + i < 7 && i != 0){
+                        moves.push(lettersOnBoard[currentLetNum + i] + aboveNum2);
+                    }
+                }
+                }
+                let aboveNum1 = parseInt(currentPosition[1]) + 1
+                for (var i = -2; i <= 2; i++){
+                    if (currentLetNum + i != -1 && currentLetNum + i != 7 && aboveNum1 != 9){
+                        if (currentLetNum + i != -1 && currentLetNum + i != 9 && aboveNum1 != 0 && i != 0 && i != 1 && i != -1){
+                        moves.push(lettersOnBoard[currentLetNum + i] + aboveNum1);
+                    }    
+                    }
+                }
+                let belowNum1 = parseInt(currentPosition[1]) -1
+                for (var i = -2; i <= 2; i++){
+                    if (currentLetNum + i != -1 && currentLetNum + i != 7 && belowNum1 != 0 && belowNum1 !=-1){
+                        if (i != 0 && currentLetNum + i != -1 && currentLetNum + i != 7 && aboveNum1 != 0 && i != 0 && i != 1 && i != -1){
+                        moves.push(lettersOnBoard[currentLetNum + i] + belowNum1);
+                    }
+                    }
+                }
+                let belowNum2 = parseInt(currentPosition[1]) - 2
+                for (var i = -1; i <= 1; i++){
+                    if (currentLetNum + i != -1 && currentLetNum + i != 7 && belowNum2 != 0 && belowNum2 !=-1){
+                        if (currentLetNum + i > -2 && currentLetNum + i < 7 && i != 0){
+                        moves.push(lettersOnBoard[currentLetNum + i] + belowNum2);
+                    }
+                    }
+                }
+                return moves;
+            }
+            //method to return all of the obstructed moves based on the total moves
+            getObstructedMoves(){
+                let totalMoves = this.getTotalMoves();
+                let obstructedMoves = [];
+                totalMoves.forEach((c) => {
+                    console.log(c)
+                    if (chessBoard[c][0] != "OO"){
+                        obstructedMoves.push(c);
+                    }
+                })
+                return obstructedMoves;
+            }
+            //method to return all of the moves which are not obstructed
+            getFreeMoves(){
+                let totalMoves = this.getTotalMoves();
+                let obstructedMoves = this.getObstructedMoves();
+                totalMoves = totalMoves.filter( (c) => !obstructedMoves.includes(c) );
+                return totalMoves;
+            }
+            getAvailableCaptures(){
+                let finalCaptures =[]
+                this.getObstructedMoves().forEach((c) => {
+                    if (chessBoard[c][0][0] != this.color){
+                        finalCaptures.push(c);
+                    }
+                })
+                return finalCaptures
+            }
+        }
         class pawn extends piece{
             constructor(_position, _color){
                 // super is the position constructor, uh basically does some super cool inheritence stuff or something. 
@@ -1049,6 +1122,14 @@ window.onload = wrap_img;
         setBoard(kingw)
         let kingb = new king ("e8", "b")
         setBoard(kingb)
+        let knightw1 = new knight ("b1", "w")
+        setBoard(knightw1)
+        let knightw2 = new knight ("g1", "w")
+        setBoard(knightw2)
+        let knightb1 = new knight ("b8", "b")
+        setBoard(knightb1)
+        let knightb2 = new knight ("g8", "b")
+        setBoard(knightb2)
         //puts the pieces on the board
         putBoard()
         //function to add the board to the table
