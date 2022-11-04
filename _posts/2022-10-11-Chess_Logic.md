@@ -484,7 +484,6 @@ layout: notebook
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-javascript"><pre><span></span><span class="kr">class</span> <span class="nx">bishop</span> <span class="kr">extends</span> <span class="nx">piece</span><span class="p">{</span>
-    
     <span class="nx">constructor</span><span class="p">(</span><span class="nx">_position</span><span class="p">,</span> <span class="nx">_color</span><span class="p">){</span>
         <span class="c1">// super is the position constructor, uh basically does some super cool inheritence stuff or something. </span>
         <span class="kr">super</span><span class="p">(</span><span class="nx">_position</span><span class="p">,</span> <span class="nx">_color</span><span class="p">);</span>
@@ -916,7 +915,7 @@ OO OO OO OO OO OO OO OO </pre>
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[ &#39;d4&#39;, &#39;d2&#39;, &#39;e2&#39;, &#39;f2&#39;, &#39;d1&#39;, &#39;f1&#39; ]
+<pre>[ &#39;d2&#39;, &#39;e2&#39;, &#39;f2&#39;, &#39;d1&#39;, &#39;f1&#39; ]
 </pre>
 </div>
 </div>
