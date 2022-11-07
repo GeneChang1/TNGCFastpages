@@ -8,8 +8,8 @@
 <meta name="generator" content="Jekyll v4.1.1" />
 <meta property="og:title" content="Chess" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="How do I play chess? Report an Issue a b c d e f g h 8 7 6 5 4 3 2 1" />
-<meta property="og:description" content="How do I play chess? Report an Issue a b c d e f g h 8 7 6 5 4 3 2 1" />
+<meta name="description" content="How do I play chess? Report an Issue a b c d e f g h 8 7 6 5 4 3 2 1 Check Board" />
+<meta property="og:description" content="How do I play chess? Report an Issue a b c d e f g h 8 7 6 5 4 3 2 1 Check Board" />
 <link rel="canonical" href="https://genechang1.github.io/TNGCFastpages/project/2022/10/20/Chessboard.html" />
 <meta property="og:url" content="https://genechang1.github.io/TNGCFastpages/project/2022/10/20/Chessboard.html" />
 <meta property="og:site_name" content="TNGCFastpages" />
@@ -18,7 +18,7 @@
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Chess" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-10-20T00:00:00-05:00","datePublished":"2022-10-20T00:00:00-05:00","description":"How do I play chess? Report an Issue a b c d e f g h 8 7 6 5 4 3 2 1","headline":"Chess","mainEntityOfPage":{"@type":"WebPage","@id":"https://genechang1.github.io/TNGCFastpages/project/2022/10/20/Chessboard.html"},"url":"https://genechang1.github.io/TNGCFastpages/project/2022/10/20/Chessboard.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-10-20T00:00:00-05:00","datePublished":"2022-10-20T00:00:00-05:00","description":"How do I play chess? Report an Issue a b c d e f g h 8 7 6 5 4 3 2 1 Check Board","headline":"Chess","mainEntityOfPage":{"@type":"WebPage","@id":"https://genechang1.github.io/TNGCFastpages/project/2022/10/20/Chessboard.html"},"url":"https://genechang1.github.io/TNGCFastpages/project/2022/10/20/Chessboard.html"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/TNGCFastpages/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://genechang1.github.io/TNGCFastpages/feed.xml" title="TNGCFastpages" /><link rel="shortcut icon" type="image/x-icon" href="/TNGCFastpages/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
@@ -1027,8 +1027,88 @@ window.onload = wrap_img;
                 putOnBoard(x);
             }
         }
+        const url = "https://tngc.nighthawkcodescrums.gq/api/chess";
+        function checkAPIMove(){
+            fetch(url + "/", options)
+            .then(response => {
+                // check for response errors
+                if (response.status !== 200) {
+                    console.log('GET API response failure: ' + response.status);
+                    return;
+                }
+                response.json().then(data => {
+                    movePiece(data["moves"][0], data["moves"][1])
+                })
+            }).catch(err => {
+                console.log(err + " it doesn't work");
+            })
+        }
+        let startTurn;
+        function checkAPITurn(){
+            startTurn = turn
+            console.log(turn)
+            fetch(url, options)
+            .then(response => {
+                // check for response errors
+                if (response.status !== 200) {
+                    console.log('GET API response failure: ' + response.status);
+                    return;
+                }
+                console.log("bruh why no work")
+                response.json().then(data => {
+                    console.log(data["turn"])
+                    console.log(turn)
+                    if(data["turn"] != turn){
+                        turn = data["turn"]
+                    }
+                })
+            }).catch(err => {
+                console.log(err + " it doesn't work");
+            })
+            if (startTurn != turn){
+                checkAPIMove();
+                return;
+            }
+        }
+        function pushAPIMove(current, newM){
+            fetch(url + "/move1/" + current, options)
+            .then(response => {
+                // check for response errors
+                if (response.status !== 200) {
+                    console.log('GET API response failure: ' + response.status);
+                    return;
+                }
+            }).catch(err => {
+                console.log(err + " it doesn't work");
+            })
+            fetch(url + "/move2/" + newM, options)
+            .then(response => {
+                // check for response errors
+                if (response.status !== 200) {
+                    console.log('GET API response failure: ' + response.status);
+                    return;
+                }
+            })
+            .catch(err => {
+                console.log(err + " it doesn't work");
+            });
+        }
+        function doesThisButtonWork(){
+            console.log("yes")
+        }
     </script>
+    <button onclick="checkAPITurn()">Check Board</button>
     <script>
+        const options = {
+            method: 'GET', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'omit', // include, *same-origin, omit
+            headers: {
+            'Content-Type': 'application/json'
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+        };
         // all of the setup
         lettersOnBoard = "abcdefgh";
         chessBoard = {};
@@ -1041,6 +1121,7 @@ window.onload = wrap_img;
             }
         }
         let currentM = [];
+        let localColor = "";
         // assigns chess piece codes to their emoji 
         let chessPieces = {
             wP: "♙",
@@ -1142,7 +1223,7 @@ window.onload = wrap_img;
         }
         function move(id){
             var td = $(id).closest('td').attr('id')
-            if (!moving && document.getElementById(td).innerHTML != "" && turnCheck(td)){
+            if (!moving && document.getElementById(td).innerHTML != "" && turnMoveCheck(td)){
                 moving = true
                 if (td.innerHTML != ""){
                     currentM.push(td);
@@ -1155,9 +1236,13 @@ window.onload = wrap_img;
             }else if (document.getElementById(td).className == "selected"){
                 movePiece(currentM[0], td)
                 putBoard();
-                currentM = [];
                 moving = false;
+                if (turn == 0){localColor = "w"}
+                if (turn == 1){localColor = "b"}
                 turn += 1;
+                pushAPIMove(currentM[0], td)
+                // checkAPITurn()
+                currentM = [];
             }else{
                 putBoard();
                 currentM = [];
@@ -1167,7 +1252,7 @@ window.onload = wrap_img;
                 }
             }
         }
-        function turnCheck(td){
+        function turnMoveCheck(td){
             if (turn % 2 == 1 && chessBoard[td][0][0] == "b"){
                 return true
             }
@@ -1176,6 +1261,17 @@ window.onload = wrap_img;
             }
             else {
                 return false;
+            }
+        }
+        function turnColorCheck(color){
+            if (color == "w" && turn % 2 == 0){
+                return true;
+            }
+            if (color == "b" && turn % 2 == 1){
+                return true
+            }
+            else{
+                return false
             }
         }
     </script>
