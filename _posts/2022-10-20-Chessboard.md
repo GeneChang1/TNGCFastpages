@@ -587,7 +587,7 @@ title: Chess
                 let currentLetNum = lettersOnBoard.indexOf(currentPosition[0])  
                 for (var i = -1; i <= 1; i++){
                     if (currentLetNum + i != -1 && currentLetNum + i != 7 && aboveNum2 != 9 && aboveNum2 != 10){
-                        if (currentLetNum + i > -1 && currentLetNum + i < 7 && i != 0){
+                        if (currentLetNum + i >= -1 && currentLetNum + i <= 7 && i != 0){
                         moves.push(lettersOnBoard[currentLetNum + i] + aboveNum2);
                     }
                 }
@@ -939,8 +939,88 @@ title: Chess
                 putOnBoard(x);
             }
         }
+        const url = "https://tngc.nighthawkcodescrums.gq/api/chess";
+        function checkAPIMove(){
+            fetch(url + "/", options)
+            .then(response => {
+                // check for response errors
+                if (response.status !== 200) {
+                    console.log('GET API response failure: ' + response.status);
+                    return;
+                }
+                response.json().then(data => {
+                    movePiece(data["moves"][0], data["moves"][1])
+                })
+            }).catch(err => {
+                console.log(err + " it doesn't work");
+            })
+        }
+        let startTurn;
+        function checkAPITurn(){
+            startTurn = turn
+            console.log(turn)
+            fetch(url, options)
+            .then(response => {
+                // check for response errors
+                if (response.status !== 200) {
+                    console.log('GET API response failure: ' + response.status);
+                    return;
+                }
+                console.log("bruh why no work")
+                response.json().then(data => {
+                    console.log(data["turn"])
+                    console.log(turn)
+                    if(data["turn"] != turn){
+                        turn = data["turn"]
+                    }
+                })
+            }).catch(err => {
+                console.log(err + " it doesn't work");
+            })
+            if (startTurn != turn){
+                checkAPIMove();
+                return;
+            }
+        }
+        function pushAPIMove(current, newM){
+            fetch(url + "/move1/" + current, options)
+            .then(response => {
+                // check for response errors
+                if (response.status !== 200) {
+                    console.log('GET API response failure: ' + response.status);
+                    return;
+                }
+            }).catch(err => {
+                console.log(err + " it doesn't work");
+            })
+            fetch(url + "/move2/" + newM, options)
+            .then(response => {
+                // check for response errors
+                if (response.status !== 200) {
+                    console.log('GET API response failure: ' + response.status);
+                    return;
+                }
+            })
+            .catch(err => {
+                console.log(err + " it doesn't work");
+            });
+        }
+        function doesThisButtonWork(){
+            console.log("yes")
+        }
     </script>
+    <button onclick="checkAPITurn()">Check Board</button>
     <script>
+        const options = {
+            method: 'GET', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'omit', // include, *same-origin, omit
+            headers: {
+            'Content-Type': 'application/json'
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+        };
         // all of the setup
         lettersOnBoard = "abcdefgh";
         chessBoard = {};
@@ -953,6 +1033,7 @@ title: Chess
             }
         }
         let currentM = [];
+        let localColor = "";
         // assigns chess piece codes to their emoji 
         let chessPieces = {
             wP: "♙",
@@ -1054,7 +1135,7 @@ title: Chess
         }
         function move(id){
             var td = $(id).closest('td').attr('id')
-            if (!moving && document.getElementById(td).innerHTML != "" && turnCheck(td)){
+            if (!moving && document.getElementById(td).innerHTML != "" && turnMoveCheck(td)){
                 moving = true
                 if (td.innerHTML != ""){
                     currentM.push(td);
@@ -1067,9 +1148,13 @@ title: Chess
             }else if (document.getElementById(td).className == "selected"){
                 movePiece(currentM[0], td)
                 putBoard();
-                currentM = [];
                 moving = false;
+                if (turn == 0){localColor = "w"}
+                if (turn == 1){localColor = "b"}
                 turn += 1;
+                pushAPIMove(currentM[0], td)
+                // checkAPITurn()
+                currentM = [];
             }else{
                 putBoard();
                 currentM = [];
@@ -1079,7 +1164,7 @@ title: Chess
                 }
             }
         }
-        function turnCheck(td){
+        function turnMoveCheck(td){
             if (turn % 2 == 1 && chessBoard[td][0][0] == "b"){
                 return true
             }
@@ -1088,6 +1173,17 @@ title: Chess
             }
             else {
                 return false;
+            }
+        }
+        function turnColorCheck(color){
+            if (color == "w" && turn % 2 == 0){
+                return true;
+            }
+            if (color == "b" && turn % 2 == 1){
+                return true
+            }
+            else{
+                return false
             }
         }
     </script>
