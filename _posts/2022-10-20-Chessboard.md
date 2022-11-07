@@ -5,7 +5,7 @@ categories: [project]
 title: Chess
 ---
 <a href="https://www.chess.com/learn-how-to-play-chess">
-    <button>How do I play chess?</i><button>
+    <button>How do I play chess?<button>
 <a href="{{ site.baseurl }}/2022/10/23/Feedback.html">
     <button>Report an Issue<button>
 <html>
