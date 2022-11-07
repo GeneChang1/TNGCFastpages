@@ -406,7 +406,6 @@ title: Chess
                 obstructedMoves.forEach((c) => {
                     if (chessBoard[c][0][0] != this.color) {finalCaptures.push(c)}
                 })
-                console.log(finalCaptures)
                 return finalCaptures
             }
             getFreeMoves(){
@@ -586,32 +585,33 @@ title: Chess
                 let aboveNum2 = parseInt(currentPosition[1]) + 2
                 let currentLetNum = lettersOnBoard.indexOf(currentPosition[0])  
                 for (var i = -1; i <= 1; i++){
-                    if (currentLetNum + i != -1 && currentLetNum + i != 7 && aboveNum2 != 9 && aboveNum2 != 10){
-                        if (currentLetNum + i > -1 && currentLetNum + i < 7 && i != 0){
-                        moves.push(lettersOnBoard[currentLetNum + i] + aboveNum2);
+                    if (currentLetNum + i != -1 && currentLetNum + i != 8 && aboveNum2 != 9 && aboveNum2 != 10 && aboveNum2 != 11){
+                        if (currentLetNum + i > -1 && currentLetNum + i < 8 && i != 0){
+                            moves.push(lettersOnBoard[currentLetNum + i] + aboveNum2);
                     }
                 }
                 }
                 let aboveNum1 = parseInt(currentPosition[1]) + 1
                 for (var i = -2; i <= 2; i++){
-                    if (currentLetNum + i != -1 && currentLetNum + i != 7 && aboveNum1 != 9){
-                        if (currentLetNum + i != -1 && currentLetNum + i != 9 && aboveNum1 != 0 && i != 0 && i != 1 && i != -1){
-                        moves.push(lettersOnBoard[currentLetNum + i] + aboveNum1);
+                    if (currentLetNum + i != -2 && currentLetNum + i != 8 && aboveNum1 != 9){
+                        if (currentLetNum + i != -2 && currentLetNum + i != -1 && currentLetNum + i != 8 && currentLetNum + i != 9 && aboveNum1 != 0 && i != 0 && i != 1 && i != -1){
+                            moves.push(lettersOnBoard[currentLetNum + i] + aboveNum1);
+                            console.log(moves)
                     }    
                     }
                 }
                 let belowNum1 = parseInt(currentPosition[1]) -1
                 for (var i = -2; i <= 2; i++){
-                    if (currentLetNum + i != -1 && currentLetNum + i != 7 && belowNum1 != 0 && belowNum1 !=-1){
-                        if (i != 0 && currentLetNum + i != -1 && currentLetNum + i != 7 && aboveNum1 != 0 && i != 0 && i != 1 && i != -1){
-                        moves.push(lettersOnBoard[currentLetNum + i] + belowNum1);
+                    if (currentLetNum + i != -2 && currentLetNum + i != 8 && belowNum1 != 0 && belowNum1 !=-1){
+                        if (currentLetNum + i != -2 && currentLetNum + i != -1 && currentLetNum + i != 8 && currentLetNum + i != 9 && aboveNum1 != 0 && i != 0 && i != 1 && i != -1){
+                            moves.push(lettersOnBoard[currentLetNum + i] + belowNum1);
                     }
                     }
                 }
                 let belowNum2 = parseInt(currentPosition[1]) - 2
                 for (var i = -1; i <= 1; i++){
-                    if (currentLetNum + i != -1 && currentLetNum + i != 7 && belowNum2 != 0 && belowNum2 !=-1){
-                        if (currentLetNum + i > -2 && currentLetNum + i < 7 && i != 0){
+                    if (currentLetNum + i != -1 && currentLetNum + i != 8 && belowNum2 != 0 && belowNum2 !=-1){
+                        if (currentLetNum + i > -1 && currentLetNum + i < 8 && i != 0){
                         moves.push(lettersOnBoard[currentLetNum + i] + belowNum2);
                     }
                     }
@@ -623,7 +623,7 @@ title: Chess
                 let totalMoves = this.getTotalMoves();
                 let obstructedMoves = [];
                 totalMoves.forEach((c) => {
-                    console.log(c)
+                    console.log(totalMoves)
                     if (chessBoard[c][0] != "OO"){
                         obstructedMoves.push(c);
                     }
@@ -763,7 +763,6 @@ title: Chess
                     let a = parseInt(currentPosition[1]) + (1);
                         if (a != 9){
                             let check = c + a
-                            console.log(check)
                             if (chessBoard[check][0][0] != this.color && chessBoard[check][0] != "OO"){
                                 captures.push(check);
                         }
@@ -771,7 +770,6 @@ title: Chess
                     let b = parseInt(currentPosition[1]) - (1)
                         if (b != 0){
                             let check1 = c + b
-                            console.log(check1)
                             if (chessBoard[check1][0][0] != this.color && chessBoard[check1][0] != "OO"){
                                 captures.push(check1);
                         }
@@ -899,7 +897,6 @@ title: Chess
                 obstructedMoves.forEach((c) => {
                     if (chessBoard[c][0][0] != this.color) {finalCaptures.push(c)}
                 })
-                console.log(finalCaptures)
                 return finalCaptures
             }
         }
